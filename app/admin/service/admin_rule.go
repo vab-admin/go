@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	"erp/app/admin/repository"
-	"erp/app/admin/schema"
-	"erp/pkg/errors"
-	"erp/pkg/model"
-	"erp/pkg/util"
 	"github.com/elliotchance/pie/v2"
 	"github.com/thoas/go-funk"
+	"vab-admin/go/app/admin/repository"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/errors"
+	"vab-admin/go/pkg/model"
+	"vab-admin/go/pkg/util"
 )
 
 type AdminRule struct {

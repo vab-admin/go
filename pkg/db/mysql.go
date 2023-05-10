@@ -3,8 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"erp/pkg/config"
-	"erp/pkg/contextx"
 	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
@@ -14,6 +12,8 @@ import (
 	"gorm.io/gorm/logger"
 	"log"
 	"time"
+	"vab-admin/go/pkg/config"
+	"vab-admin/go/pkg/contextx"
 )
 
 var (

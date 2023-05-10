@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"erp/app/admin/schema"
-	"erp/app/admin/service"
-	"erp/pkg/httpx"
 	"github.com/labstack/echo/v5"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/app/admin/service"
+	"vab-admin/go/pkg/httpx"
 )
 
 type AdminUser struct {
@@ -99,7 +99,14 @@ func (h *AdminUser) Edit(c echo.Context) error {
 	return httpx.OkJSON(c, "获取成功", result)
 }
 
+// Delete
+// @param c
+// @date 2023-05-11 00:41:17
 func (h *AdminUser) Delete(c echo.Context) error { return nil }
+
+// Update
+// @param c
+// @date 2023-05-11 00:41:19
 func (h *AdminUser) Update(c echo.Context) error {
 	req := &schema.AdminUserUpdateRequest{}
 

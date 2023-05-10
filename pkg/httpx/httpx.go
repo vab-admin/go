@@ -4,8 +4,7 @@ import (
 	"github.com/labstack/echo/v5"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-
-	"erp/pkg/errors"
+	"vab-admin/go/pkg/errors"
 )
 
 // Bind

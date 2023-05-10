@@ -1,8 +1,8 @@
 package schema
 
 import (
-	"erp/pkg/validate"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"vab-admin/go/pkg/validate"
 )
 
 type (

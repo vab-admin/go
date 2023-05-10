@@ -2,16 +2,16 @@ package service
 
 import (
 	"context"
-	"erp/app/admin/repository"
-	"erp/app/admin/schema"
-	"erp/pkg/auth/jwtauth"
-	"erp/pkg/db"
-	"erp/pkg/errors"
-	"erp/pkg/model"
-	"erp/pkg/pagination"
-	"erp/pkg/util/hash"
 	"github.com/alibabacloud-go/tea/tea"
 	"time"
+	"vab-admin/go/app/admin/repository"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/auth/jwtauth"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/errors"
+	"vab-admin/go/pkg/model"
+	"vab-admin/go/pkg/pagination"
+	"vab-admin/go/pkg/util/hash"
 )
 
 type AdminUser struct {

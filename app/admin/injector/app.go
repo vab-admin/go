@@ -1,11 +1,10 @@
 package injector
 
 import (
-	"erp/pkg/json_serializer"
 	"github.com/labstack/echo/v5"
 	log "github.com/sirupsen/logrus"
-
-	"erp/app/admin/router"
+	"vab-admin/go/app/admin/router"
+	"vab-admin/go/pkg/json_serializer"
 )
 
 // Run

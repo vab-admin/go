@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"erp/app/admin/schema"
-	"erp/pkg/db"
-	"erp/pkg/errors"
-	"erp/pkg/model"
 	log "github.com/sirupsen/logrus"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/errors"
+	"vab-admin/go/pkg/model"
 )
 
 var (

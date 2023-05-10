@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
-	"erp/pkg/config"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"log"
+	"vab-admin/go/pkg/config"
 )
 
 var redisDB *redis.Client

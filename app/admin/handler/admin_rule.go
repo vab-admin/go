@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"erp/app/admin/schema"
-	"erp/app/admin/service"
-	"erp/pkg/httpx"
 	"github.com/labstack/echo/v5"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/app/admin/service"
+	"vab-admin/go/pkg/httpx"
 )
 
 type AdminRule struct {
@@ -95,6 +95,9 @@ func (h *AdminRule) Delete(c echo.Context) error {
 	return httpx.OK(c, "删除成功")
 }
 
+// Tree
+// @param c
+// @date 2023-05-11 00:41:09
 func (h *AdminRule) Tree(c echo.Context) error {
 	ctx := c.Request().Context()
 

@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"erp/app/admin/repository"
-	"erp/pkg/model"
 	"github.com/elliotchance/pie/v2"
+	"vab-admin/go/app/admin/repository"
+	"vab-admin/go/pkg/model"
 )
 
 type AdminGroupRule struct {

@@ -3,12 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"erp/app/admin/schema"
-	"erp/pkg/db"
-	"erp/pkg/errors"
-	"erp/pkg/model"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/errors"
+	"vab-admin/go/pkg/model"
 )
 
 type AdminGroup struct {
@@ -85,6 +85,10 @@ func (r *AdminGroup) Create(ctx context.Context, m *model.AdminGroup) error {
 	return nil
 }
 
+// IdsByIds
+// @param ctx
+// @param ids
+// @date 2023-05-11 00:40:25
 func (r *AdminGroup) IdsByIds(ctx context.Context, ids ...uint64) ([]uint64, error) {
 	var newIds []uint64
 	tx := db.Instance(ctx).Model(&model.AdminGroup{}).Where("id IN @ids", sql.Named("ids", ids)).Pluck("id", &newIds)

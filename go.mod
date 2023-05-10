@@ -1,4 +1,4 @@
-module erp
+module vab-admin/go
 
 go 1.20
 

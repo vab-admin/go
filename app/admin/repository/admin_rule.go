@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"erp/pkg/db"
-	"erp/pkg/errors"
-	"erp/pkg/model"
 	log "github.com/sirupsen/logrus"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/errors"
+	"vab-admin/go/pkg/model"
 )
 
 type AdminRule struct {

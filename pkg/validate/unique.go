@@ -2,14 +2,11 @@ package validate
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
-
-	"erp/pkg/db"
-	"erp/pkg/errors"
-
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm/clause"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/errors"
 )
 
 func Unique(model interface{}, field string) UniqueRule {

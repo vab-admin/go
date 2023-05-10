@@ -7,10 +7,10 @@
 package injector
 
 import (
-	"erp/app/admin/handler"
-	"erp/app/admin/repository"
-	"erp/app/admin/router"
-	"erp/app/admin/service"
+	"vab-admin/go/app/admin/handler"
+	"vab-admin/go/app/admin/repository"
+	"vab-admin/go/app/admin/router"
+	"vab-admin/go/app/admin/service"
 )
 
 // Injectors from wire.go:

@@ -4,8 +4,8 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 
-	"erp/pkg/db"
-	"erp/pkg/errors"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/errors"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"gorm.io/gorm/clause"

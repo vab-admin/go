@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"erp/app/admin/injector"
-	"erp/pkg/config"
-	"erp/pkg/db"
-	"erp/pkg/model"
 	log "github.com/sirupsen/logrus"
+	"vab-admin/go/app/admin/injector"
+	"vab-admin/go/pkg/config"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/model"
 )
 
 func initLogger() {

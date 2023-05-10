@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"erp/app/admin/schema"
-	"erp/app/admin/service"
-	"erp/pkg/httpx"
 	"github.com/labstack/echo/v5"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/app/admin/service"
+	"vab-admin/go/pkg/httpx"
 )
 
 type AdminGroup struct {

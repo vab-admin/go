@@ -1,8 +1,8 @@
 package util
 
 import (
-	"erp/pkg/model"
 	"gorm.io/datatypes"
+	"vab-admin/go/pkg/model"
 )
 
 func AdminRuleToTree(rows []*model.AdminRule, pid uint64) []*model.AdminRule {

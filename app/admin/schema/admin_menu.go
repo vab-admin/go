@@ -1,10 +1,10 @@
 package schema
 
 import (
-	"erp/pkg/model"
-	"erp/pkg/validate"
 	"github.com/alibabacloud-go/tea/tea"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"vab-admin/go/pkg/model"
+	"vab-admin/go/pkg/validate"
 )
 
 type (

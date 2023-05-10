@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"erp/app/admin/repository"
-	"erp/app/admin/schema"
-	"erp/pkg/db"
-	"erp/pkg/model"
 	"github.com/alibabacloud-go/tea/tea"
 	"time"
+	"vab-admin/go/app/admin/repository"
+	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/db"
+	"vab-admin/go/pkg/model"
 )
 
 type AdminGroup struct {

@@ -1,8 +1,8 @@
 package schema
 
 import (
-	"erp/pkg/model"
 	"github.com/alibabacloud-go/tea/tea"
+	"vab-admin/go/pkg/model"
 )
 
 type (
