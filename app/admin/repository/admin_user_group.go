@@ -55,3 +55,11 @@ func (r *AdminUserGroup) DeleteByUserIdWithGroupId(ctx context.Context, userId u
 
 	return nil
 }
+
+// DeleteByUserId
+// @param ctx
+// @param userId
+// @date 2023-05-11 21:12:23
+func (r *AdminUserGroup) DeleteByUserId(ctx context.Context, userId uint64) error {
+	return db.Session(ctx).Where("user_id IN @userId", sql.Named("userId", userId)).Delete(&model.AdminUserGroup{}).Error
+}

@@ -102,7 +102,21 @@ func (h *AdminUser) Edit(c echo.Context) error {
 // Delete
 // @param c
 // @date 2023-05-11 00:41:17
-func (h *AdminUser) Delete(c echo.Context) error { return nil }
+func (h *AdminUser) Delete(c echo.Context) error {
+	req := &schema.AdminUserDeleteRequest{}
+
+	if err := httpx.Bind(c, req); err != nil {
+		return err
+	}
+
+	ctx := c.Request().Context()
+
+	if err := h.AdminUserService.Delete(ctx, req); err != nil {
+		return err
+	}
+
+	return httpx.OK(c, "删除成功")
+}
 
 // Update
 // @param c

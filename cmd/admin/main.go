@@ -9,6 +9,8 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
+// initLogger
+// @date 2023-05-11 00:51:13
 func initLogger() {
 	formatter := &log.TextFormatter{
 		DisableColors: true,
@@ -20,8 +22,9 @@ func initLogger() {
 
 }
 
-func createDatabase() {
-	conf := config.NewConfig()
+// createDatabase
+// @date 2023-05-11 00:51:16
+func createDatabase(conf config.Config) {
 
 	db.NewDB(conf.Database)
 	db.NewRedis(conf.Redis)
@@ -30,13 +33,15 @@ func createDatabase() {
 		&model.AdminUser{},
 		&model.AdminRule{},
 		&model.AdminGroup{},
-		&model.AdminRuleAction{},
+		&model.SystemApi{},
 	)
 }
 
-func createApp() {
+// createApp
+// @date 2023-05-11 00:51:21
+func createApp(conf config.Config) {
 
-	app, err := injector.CreateApp()
+	app, err := injector.CreateApp(conf)
 	if err != nil {
 		log.WithError(err).Fatal("创建应用失败")
 		return
@@ -47,7 +52,8 @@ func createApp() {
 
 func main() {
 	initLogger()
-	createDatabase()
+	conf := config.NewConfig()
 
-	createApp()
+	createDatabase(conf)
+	createApp(conf)
 }

@@ -9,3 +9,5 @@ database:
   migrate: true
 redis:
   addr: 127.0.0.1:6379
+casbin:
+  model: ./config/model.conf

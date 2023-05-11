@@ -26,3 +26,13 @@ func FromTrans(ctx context.Context) (interface{}, bool) {
 func NewUserId(ctx context.Context, userId uint64) context.Context {
 	return context.WithValue(ctx, userIdCtx{}, userId)
 }
+
+func FromUserID(ctx context.Context) uint64 {
+	v := ctx.Value(userIdCtx{})
+	if v != nil {
+		if s, ok := v.(uint64); ok {
+			return s
+		}
+	}
+	return 0
+}

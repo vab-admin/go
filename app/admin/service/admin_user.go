@@ -15,8 +15,9 @@ import (
 )
 
 type AdminUser struct {
-	AdminUserRepo         *repository.AdminUser
+	EnforcerService       *Enforcer
 	AdminUserGroupService *AdminUserGroup
+	AdminUserRepo         *repository.AdminUser
 }
 
 // Login
@@ -71,7 +72,11 @@ func (s *AdminUser) Create(ctx context.Context, req *schema.AdminUserCreateReque
 			return err
 		}
 
-		return s.AdminUserGroupService.Create(ctx, user.GetId(), req.Groups...)
+		if err := s.AdminUserGroupService.Create(ctx, user.GetId(), req.Groups...); err != nil {
+			return err
+		}
+
+		return s.EnforcerService.LoadPolicy()
 	})
 }
 
@@ -91,6 +96,10 @@ func (s *AdminUser) Edit(ctx context.Context, req *schema.AdminUserEditRequest) 
 	return s.AdminUserRepo.Edit(ctx, req.ID)
 }
 
+// Update
+// @param ctx
+// @param req
+// @date 2023-05-11 16:27:18
 func (s *AdminUser) Update(ctx context.Context, req *schema.AdminUserUpdateRequest) error {
 	if err := req.Validate(); err != nil {
 		return err
@@ -114,6 +123,38 @@ func (s *AdminUser) Update(ctx context.Context, req *schema.AdminUserUpdateReque
 			return err
 		}
 
-		return s.AdminUserGroupService.Update(ctx, req.ID, req.Groups...)
+		if err := s.AdminUserGroupService.Update(ctx, req.ID, req.Groups...); err != nil {
+			return err
+		}
+
+		return s.EnforcerService.LoadPolicy()
 	})
+}
+
+// Delete
+// @param ctx
+// @date 2023-05-11 20:28:18
+func (s *AdminUser) Delete(ctx context.Context, req *schema.AdminUserDeleteRequest) error {
+	user, err := s.AdminUserRepo.ByDeleteId(ctx, req.ID)
+	if err != nil {
+		return err
+	}
+
+	if user.GetId() == 1 {
+		return errors.New("超级管理员无法删除")
+	}
+
+	return db.Transaction(ctx, func(ctx context.Context) error {
+
+		if err = s.AdminUserRepo.DeleteById(ctx, req.ID); err != nil {
+			return errors.ErrInternalServer
+		}
+
+		if err = s.AdminUserGroupService.Delete(ctx, req.ID); err != nil {
+			return errors.ErrInternalServer
+		}
+
+		return s.EnforcerService.LoadPolicy()
+	})
+
 }

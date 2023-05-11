@@ -24,11 +24,12 @@ func (r *Route) Api(api *echo.Group) {
 		adminRoute.DELETE("/rules/:id", r.AdminRuleHandler.Delete)         // 删除菜单规则
 		adminRoute.PUT("/rules/:id/field", r.AdminRuleHandler.UpdateField) // 更新菜单规则字段
 
-		adminRoute.GET("/rules/:ruleId/actions", r.AdminRuleActionHandler.Query)      // 查询按钮接口
-		adminRoute.POST("/rules/:ruleId/actions", r.AdminRuleActionHandler.Create)    // 创建按钮接口
-		adminRoute.GET("/rules/actions/:id/edit", r.AdminRuleActionHandler.Edit)      // 编辑按钮接口
-		adminRoute.PUT("/rules/:ruleId/actions/:id", r.AdminRuleActionHandler.Update) // 更新按钮接口
-		adminRoute.DELETE("/rules/actions/:id", r.AdminRuleHandler.Delete)            // 删除按钮接口
+		adminRoute.GET("/api/all", r.SystemApiHandler.All)       // 查询按钮接口
+		adminRoute.GET("/api", r.SystemApiHandler.Query)         // 查询按钮接口
+		adminRoute.POST("/api", r.SystemApiHandler.Create)       // 创建按钮接口
+		adminRoute.GET("/api/:id/edit", r.SystemApiHandler.Edit) // 编辑按钮接口
+		adminRoute.PUT("/api/:id", r.SystemApiHandler.Update)    // 更新按钮接口
+		adminRoute.DELETE("/api/:id", r.AdminRuleHandler.Delete) // 删除按钮接口
 
 		adminRoute.GET("/group", r.AdminGroupHandler.Query)         // 查询管理员分组
 		adminRoute.POST("/group", r.AdminGroupHandler.Create)       // 创建管理员分组

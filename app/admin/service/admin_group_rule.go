@@ -65,3 +65,11 @@ func (s *AdminGroupRule) Update(ctx context.Context, groupId uint64, ruleId ...u
 
 	return nil
 }
+
+// DeleteByGroupId
+// @param ctx
+// @param groupId
+// @date 2023-05-11 21:16:09
+func (s *AdminGroupRule) DeleteByGroupId(ctx context.Context, groupId uint64) error {
+	return s.AdminGroupRuleRepo.DeleteByGroupId(ctx, groupId)
+}

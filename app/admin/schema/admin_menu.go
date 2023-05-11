@@ -9,25 +9,26 @@ import (
 
 type (
 	AdminRuleCreateRequest struct {
-		Type        uint8  `json:"type"`
-		Status      uint8  `json:"status"`
-		ParentId    uint64 `json:"parentId"`
-		Name        string `json:"name"`
-		Path        string `json:"path"`
-		Component   string `json:"component"`
-		Redirect    string `json:"redirect"`
-		Sort        int64  `json:"sort"`
-		Title       string `json:"title"`
-		Hidden      bool   `json:"hidden"`
-		LevelHidden bool   `json:"levelHidden"`
-		Icon        string `json:"icon"`
-		NoKeepAlive bool   `json:"noKeepAlive"`
-		NoClosable  bool   `json:"noClosable"`
-		NoColumn    bool   `json:"noColumn"`
-		Badge       string `gorm:"" json:"badge"`
-		TabHidden   bool   `json:"tabHidden"`
-		Dot         bool   `json:"dot"`
-		Target      string `json:"target"`
+		Type        uint8    `json:"type"`
+		Status      uint8    `json:"status"`
+		ParentId    uint64   `json:"parentId"`
+		Name        string   `json:"name"`
+		Path        string   `json:"path"`
+		Component   string   `json:"component"`
+		Redirect    string   `json:"redirect"`
+		Sort        int64    `json:"sort"`
+		Title       string   `json:"title"`
+		Hidden      bool     `json:"hidden"`
+		LevelHidden bool     `json:"levelHidden"`
+		Icon        string   `json:"icon"`
+		NoKeepAlive bool     `json:"noKeepAlive"`
+		NoClosable  bool     `json:"noClosable"`
+		NoColumn    bool     `json:"noColumn"`
+		Badge       string   `gorm:"" json:"badge"`
+		TabHidden   bool     `json:"tabHidden"`
+		Dot         bool     `json:"dot"`
+		Target      string   `json:"target"`
+		Apis        []uint64 `json:"apis"`
 	}
 
 	AdminRuleEditRequest struct {

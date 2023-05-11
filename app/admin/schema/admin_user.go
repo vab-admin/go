@@ -65,6 +65,10 @@ type (
 		AdminUserEditRequest
 		AdminUserCreateRequest
 	}
+
+	AdminUserDeleteRequest struct {
+		ID uint64 `param:"id"`
+	}
 )
 
 var (

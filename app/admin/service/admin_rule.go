@@ -6,13 +6,16 @@ import (
 	"github.com/thoas/go-funk"
 	"vab-admin/go/app/admin/repository"
 	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/db"
 	"vab-admin/go/pkg/errors"
 	"vab-admin/go/pkg/model"
 	"vab-admin/go/pkg/util"
 )
 
 type AdminRule struct {
-	AdminRuleRepo *repository.AdminRule
+	EnforcerService     *Enforcer
+	AdminRuleApiService *AdminRuleApi
+	AdminRuleRepo       *repository.AdminRule
 }
 
 // Create
@@ -30,7 +33,13 @@ func (l *AdminRule) Create(ctx context.Context, req *schema.AdminRuleCreateReque
 
 	m := req.ToAdminRuleModel()
 
-	return l.AdminRuleRepo.Create(ctx, m)
+	return db.Transaction(ctx, func(ctx context.Context) error {
+		if err := l.AdminRuleRepo.Create(ctx, m); err != nil {
+			return err
+		}
+
+		return l.AdminRuleApiService.Create(ctx, m.GetId(), req.Apis...)
+	})
 }
 
 // Edit
@@ -42,7 +51,7 @@ func (l *AdminRule) Edit(ctx context.Context, req *schema.AdminRuleEditRequest) 
 		return nil, err
 	}
 
-	return l.AdminRuleRepo.ById(ctx, req.Id)
+	return l.AdminRuleRepo.Edit(ctx, req.Id)
 }
 
 // UpdateField
@@ -90,7 +99,13 @@ func (l *AdminRule) Update(ctx context.Context, req *schema.AdminRuleUpdateReque
 
 	m := req.ToAdminRuleModel()
 
-	return l.AdminRuleRepo.Update(ctx, req.Id, m)
+	return db.Transaction(ctx, func(ctx context.Context) error {
+		if err = l.AdminRuleRepo.Update(ctx, req.Id, m); err != nil {
+			return err
+		}
+
+		return l.AdminRuleApiService.Update(ctx, req.Id, req.Apis...)
+	})
 }
 
 // Delete
@@ -111,7 +126,17 @@ func (l *AdminRule) Delete(ctx context.Context, req *schema.AdminRuleDeleteReque
 		return errors.New("此菜单下有子菜单，无法删除")
 	}
 
-	return l.AdminRuleRepo.Delete(ctx, req.Id)
+	return db.Transaction(ctx, func(ctx context.Context) error {
+		if err = l.AdminRuleRepo.Delete(ctx, req.Id); err != nil {
+			return err
+		}
+
+		if err = l.AdminRuleApiService.Delete(ctx, req.Id); err != nil {
+			return err
+		}
+
+		return l.EnforcerService.LoadPolicy()
+	})
 }
 
 // Tree

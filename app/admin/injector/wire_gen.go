@@ -11,28 +11,42 @@ import (
 	"vab-admin/go/app/admin/repository"
 	"vab-admin/go/app/admin/router"
 	"vab-admin/go/app/admin/service"
+	"vab-admin/go/pkg/config"
 )
 
 // Injectors from wire.go:
 
 // CreateApp
 // @date 2023-05-07 19:04:57
-func CreateApp() (*Injector, error) {
-	adminUser := &repository.AdminUser{}
-	adminUserGroup := &repository.AdminUserGroup{}
-	adminGroup := &repository.AdminGroup{}
-	serviceAdminUserGroup := &service.AdminUserGroup{
-		AdminUserGroupRepo: adminUserGroup,
-		AdminGroupRepo:     adminGroup,
+func CreateApp(conf config.Config) (*Injector, error) {
+	enforcer, err := service.NewCasbin(conf)
+	if err != nil {
+		return nil, err
 	}
+	adminGroup := &repository.AdminGroup{}
+	adminUserGroup := &repository.AdminUserGroup{}
+	serviceAdminUserGroup := &service.AdminUserGroup{
+		AdminGroupRepo:     adminGroup,
+		AdminUserGroupRepo: adminUserGroup,
+	}
+	adminUser := &repository.AdminUser{}
 	serviceAdminUser := &service.AdminUser{
-		AdminUserRepo:         adminUser,
+		EnforcerService:       enforcer,
 		AdminUserGroupService: serviceAdminUserGroup,
+		AdminUserRepo:         adminUser,
 	}
 	handlerAdminUser := handler.NewAdminUser(serviceAdminUser)
+	systemApi := &repository.SystemApi{}
+	adminRuleApi := &repository.AdminRuleApi{}
+	serviceAdminRuleApi := &service.AdminRuleApi{
+		SystemApiRepo:    systemApi,
+		AdminRuleApiRepo: adminRuleApi,
+	}
 	adminRule := &repository.AdminRule{}
 	serviceAdminRule := &service.AdminRule{
-		AdminRuleRepo: adminRule,
+		EnforcerService:     enforcer,
+		AdminRuleApiService: serviceAdminRuleApi,
+		AdminRuleRepo:       adminRule,
 	}
 	handlerAdminRule := &handler.AdminRule{
 		AdminRuleService: serviceAdminRule,
@@ -43,24 +57,25 @@ func CreateApp() (*Injector, error) {
 		AdminGroupRuleRepo: adminGroupRule,
 	}
 	serviceAdminGroup := &service.AdminGroup{
-		AdminGroupRepo:        adminGroup,
+		EnforcerService:       enforcer,
 		AdminGroupRuleService: serviceAdminGroupRule,
+		AdminGroupRepo:        adminGroup,
 	}
 	handlerAdminGroup := &handler.AdminGroup{
 		AdminGroupService: serviceAdminGroup,
 	}
-	adminRuleAction := &repository.AdminRuleAction{}
-	serviceAdminRuleAction := &service.AdminRuleAction{
-		AdminRuleActionRepo: adminRuleAction,
+	serviceSystemApi := &service.SystemApi{
+		SystemApiRepo: systemApi,
 	}
-	handlerAdminRuleAction := &handler.AdminRuleAction{
-		AdminRuleActionService: serviceAdminRuleAction,
+	handlerSystemApi := &handler.SystemApi{
+		SystemApiService: serviceSystemApi,
 	}
 	route := &router.Route{
-		AdminUserHandler:       handlerAdminUser,
-		AdminRuleHandler:       handlerAdminRule,
-		AdminGroupHandler:      handlerAdminGroup,
-		AdminRuleActionHandler: handlerAdminRuleAction,
+		Enforcer:          enforcer,
+		AdminUserHandler:  handlerAdminUser,
+		AdminRuleHandler:  handlerAdminRule,
+		AdminGroupHandler: handlerAdminGroup,
+		SystemApiHandler:  handlerSystemApi,
 	}
 	echo := newApp(route)
 	injector := &Injector{

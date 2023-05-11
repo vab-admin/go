@@ -7,20 +7,23 @@ import (
 	"vab-admin/go/pkg/httpx"
 )
 
-type AdminRuleAction struct {
-	AdminRuleActionService *service.AdminRuleAction
+type SystemApi struct {
+	SystemApiService *service.SystemApi
 }
 
 // Query
 // @date: 2023/05/10 02:03:14
-func (h *AdminRuleAction) Query(c echo.Context) error {
-	req := &schema.AdminRuleActionQueryRequest{}
+func (h *SystemApi) Query(c echo.Context) error {
+	req := &schema.SystemApiQueryRequest{}
+
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
 
 	ctx := c.Request().Context()
-	resp, err := h.AdminRuleActionService.Query(ctx, req)
+
+	resp, err := h.SystemApiService.Query(ctx, req)
+
 	if err != nil {
 		return err
 	}
@@ -30,8 +33,8 @@ func (h *AdminRuleAction) Query(c echo.Context) error {
 
 // Create
 // @date: 2023/05/10 02:03:14
-func (h *AdminRuleAction) Create(c echo.Context) error {
-	req := &schema.AdminRuleActionCreateRequest{}
+func (h *SystemApi) Create(c echo.Context) error {
+	req := &schema.SystemApiCreateRequest{}
 
 	if err := httpx.Bind(c, req); err != nil {
 		return err
@@ -39,7 +42,7 @@ func (h *AdminRuleAction) Create(c echo.Context) error {
 
 	ctx := c.Request().Context()
 
-	if err := h.AdminRuleActionService.Create(ctx, req); err != nil {
+	if err := h.SystemApiService.Create(ctx, req); err != nil {
 		return err
 	}
 
@@ -48,14 +51,14 @@ func (h *AdminRuleAction) Create(c echo.Context) error {
 
 // Edit
 // @date: 2023/05/10 02:03:14
-func (h *AdminRuleAction) Edit(c echo.Context) error {
-	req := &schema.AdminRuleActionEditRequest{}
+func (h *SystemApi) Edit(c echo.Context) error {
+	req := &schema.SystemApiEditRequest{}
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
 
 	ctx := c.Request().Context()
-	resp, err := h.AdminRuleActionService.Edit(ctx, req)
+	resp, err := h.SystemApiService.Edit(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -65,13 +68,16 @@ func (h *AdminRuleAction) Edit(c echo.Context) error {
 
 // Update
 // @date: 2023/05/10 02:03:14
-func (h *AdminRuleAction) Update(c echo.Context) error {
-	req := &schema.AdminRuleActionUpdateRequest{}
+func (h *SystemApi) Update(c echo.Context) error {
+	req := &schema.SystemApiUpdateRequest{}
+
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
+
 	ctx := c.Request().Context()
-	if err := h.AdminRuleActionService.Update(ctx, req); err != nil {
+
+	if err := h.SystemApiService.Update(ctx, req); err != nil {
 		return err
 	}
 
@@ -80,15 +86,30 @@ func (h *AdminRuleAction) Update(c echo.Context) error {
 
 // Delete
 // @date: 2023/05/10 02:03:14
-func (h *AdminRuleAction) Delete(c echo.Context) error {
-	req := &schema.AdminRuleActionDeleteRequest{}
+func (h *SystemApi) Delete(c echo.Context) error {
+	req := &schema.SystemApiDeleteRequest{}
+
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
+
 	ctx := c.Request().Context()
-	if err := h.AdminRuleActionService.Delete(ctx, req); err != nil {
+
+	if err := h.SystemApiService.Delete(ctx, req); err != nil {
 		return err
 	}
 
 	return httpx.OK(c, "删除成功")
+}
+
+func (h *SystemApi) All(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	resp, err := h.SystemApiService.All(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	return httpx.OkJSON(c, "获取成功", resp)
 }

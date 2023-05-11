@@ -6,19 +6,18 @@ import (
 	"github.com/labstack/echo/v5/middleware"
 	"net/http"
 	"vab-admin/go/app/admin/handler"
+	"vab-admin/go/app/admin/service"
 	"vab-admin/go/pkg/errors"
 )
 
-type ErrHandle interface {
-}
-
 type Route struct {
 	errorsMap map[string]echo.HandlerFunc `wire:"-"`
+	Enforcer  *service.Enforcer
 
-	AdminUserHandler       *handler.AdminUser
-	AdminRuleHandler       *handler.AdminRule
-	AdminGroupHandler      *handler.AdminGroup
-	AdminRuleActionHandler *handler.AdminRuleAction
+	AdminUserHandler  *handler.AdminUser
+	AdminRuleHandler  *handler.AdminRule
+	AdminGroupHandler *handler.AdminGroup
+	SystemApiHandler  *handler.SystemApi
 }
 
 // OnError
@@ -74,7 +73,7 @@ func (r *Route) RegisterHandlers(app *echo.Echo) {
 	)
 
 	v1Pub := app.Group("/api/v1")
-	v1Auth := app.Group("/api/v1")
+	v1Auth := app.Group("/api/v1") //middleware2.Casbin(r.Enforcer),
 
 	r.Api(v1Auth)
 

@@ -84,10 +84,13 @@ func (h *AdminRule) Update(c echo.Context) error {
 // @date: 2023/05/07 23:03:41
 func (h *AdminRule) Delete(c echo.Context) error {
 	req := &schema.AdminRuleDeleteRequest{}
+
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
+
 	ctx := c.Request().Context()
+
 	if err := h.AdminRuleService.Delete(ctx, req); err != nil {
 		return err
 	}

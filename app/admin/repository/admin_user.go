@@ -123,3 +123,26 @@ func (u *AdminUser) Update(ctx context.Context, id uint64, user *model.AdminUser
 	}
 	return nil
 }
+
+func (*AdminUser) ByDeleteId(ctx context.Context, userId uint64) (*model.AdminUser, error) {
+	row := &model.AdminUser{}
+	tx := db.Instance(ctx).
+		Model(&model.AdminUser{}).
+		Select([]string{"account", "nickname", "mobile", "id"}).
+		Where("id = @id", sql.Named("id", userId)).
+		Order("id DESC").Limit(1).Find(row)
+
+	if err := tx.Error; err != nil {
+		return nil, errors.ErrInternalServer
+	}
+
+	if tx.RowsAffected == 0 {
+		return nil, errors.ErrAdminUserAccountNotFound
+	}
+
+	return row, nil
+}
+
+func (u *AdminUser) DeleteById(ctx context.Context, id uint64) error {
+	return db.Session(ctx).Where("id = @id", sql.Named("id", id)).Limit(1).Delete(&model.AdminUser{}).Error
+}

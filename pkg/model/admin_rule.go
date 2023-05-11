@@ -37,6 +37,8 @@ type (
 		Status      *uint8       `gorm:"default:1;comment:是否启用" json:"status,omitempty"`
 		Type        *uint8       `gorm:"default:1;comment:菜单类型,0:公开,1:鉴权" json:"type,omitempty"`
 		Children    []*AdminRule `gorm:"-" json:"children,omitempty"`
+
+		Apis []*SystemApi `gorm:"many2many:AdminRuleApi;foreignKey:ID;joinForeignKey:RuleID;References:ID;joinReferences:ApiID" json:"apis,omitempty"`
 	}
 )
 

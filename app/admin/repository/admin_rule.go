@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"vab-admin/go/pkg/db"
 	"vab-admin/go/pkg/errors"
 	"vab-admin/go/pkg/model"
@@ -22,6 +23,25 @@ func (r *AdminRule) ById(ctx context.Context, id uint64) (*model.AdminRule, erro
 	row := &model.AdminRule{}
 
 	tx := db.Session(ctx).Model(&model.AdminRule{}).Where("id = @id", sql.Named("id", id)).Limit(1).Find(row)
+
+	if err := tx.Error; err != nil {
+		log.WithError(err).Error("获取编辑的菜单失败")
+		return nil, errors.ErrInternalServer
+	}
+
+	if tx.RowsAffected == 0 {
+		return nil, ErrAdminRuleNotFound
+	}
+
+	return row, nil
+}
+
+func (r *AdminRule) Edit(ctx context.Context, id uint64) (*model.AdminRule, error) {
+	row := &model.AdminRule{}
+
+	tx := db.Session(ctx).Model(&model.AdminRule{}).Preload("Apis", func(tx *gorm.DB) *gorm.DB {
+		return tx.Select([]string{"id", "name"})
+	}).Where("id = @id", sql.Named("id", id)).Limit(1).Find(row)
 
 	if err := tx.Error; err != nil {
 		log.WithError(err).Error("获取编辑的菜单失败")

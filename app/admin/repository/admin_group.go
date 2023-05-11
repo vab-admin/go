@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"strings"
 	"vab-admin/go/app/admin/schema"
 	"vab-admin/go/pkg/db"
 	"vab-admin/go/pkg/errors"
@@ -23,10 +24,18 @@ var (
 func (r *AdminGroup) Query(ctx context.Context, req *schema.AdminGroupQueryRequest) ([]*model.AdminGroup, error) {
 	var rows []*model.AdminGroup
 
-	tx := db.Session(ctx).Model(&model.AdminGroup{}).Select([]string{"id", "name", "created_at", "updated_at"}).Order("created_at DESC").Find(&rows)
+	tx := db.Instance(ctx).Model(&model.AdminGroup{}).Select([]string{"id", "name", "created_at", "updated_at"}).Order("created_at DESC")
+
+	if v := req.Name; v != "" {
+		tx.Where("name = @name", sql.Named("name", strings.TrimSpace(v)))
+	}
+
+	tx.Find(&rows)
+
 	if err := tx.Error; err != nil {
 		return nil, errors.ErrInternalServer
 	}
+
 	return rows, nil
 }
 
@@ -35,7 +44,7 @@ func (r *AdminGroup) Query(ctx context.Context, req *schema.AdminGroupQueryReque
 func (r *AdminGroup) Edit(ctx context.Context, id uint64) (*model.AdminGroup, error) {
 	row := &model.AdminGroup{}
 
-	tx := db.Session(ctx).Model(&model.AdminGroup{}).
+	tx := db.Instance(ctx).Model(&model.AdminGroup{}).
 		Preload("Rules", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select([]string{"id", "name"})
 		}).

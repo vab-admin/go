@@ -11,8 +11,9 @@ import (
 )
 
 type AdminGroup struct {
-	AdminGroupRepo        *repository.AdminGroup
+	EnforcerService       *Enforcer
 	AdminGroupRuleService *AdminGroupRule
+	AdminGroupRepo        *repository.AdminGroup
 }
 
 // Query
@@ -47,7 +48,11 @@ func (l *AdminGroup) Create(ctx context.Context, req *schema.AdminGroupCreateReq
 			return err
 		}
 
-		return l.AdminGroupRuleService.Create(ctx, m.GetId(), req.Rules...)
+		if err := l.AdminGroupRuleService.Create(ctx, m.GetId(), req.Rules...); err != nil {
+			return err
+		}
+
+		return l.EnforcerService.LoadPolicy()
 	})
 }
 
@@ -84,7 +89,11 @@ func (l *AdminGroup) Update(ctx context.Context, req *schema.AdminGroupUpdateReq
 			return err
 		}
 
-		return l.AdminGroupRuleService.Update(ctx, req.Id, req.Rules...)
+		if err := l.AdminGroupRuleService.Update(ctx, req.Id, req.Rules...); err != nil {
+			return err
+		}
+
+		return l.EnforcerService.LoadPolicy()
 	})
 }
 
@@ -93,8 +102,20 @@ func (l *AdminGroup) Update(ctx context.Context, req *schema.AdminGroupUpdateReq
 // @param req
 // @date 2023-05-10 20:41:29
 func (l *AdminGroup) Delete(ctx context.Context, req *schema.AdminGroupDeleteRequest) error {
+
 	if err := req.Validate(); err != nil {
 		return err
 	}
-	return l.AdminGroupRepo.Delete(ctx, req.Id)
+
+	return db.Transaction(ctx, func(ctx context.Context) error {
+		if err := l.AdminGroupRepo.Delete(ctx, req.Id); err != nil {
+			return err
+		}
+
+		if err := l.AdminGroupRuleService.DeleteByGroupId(ctx, req.Id); err != nil {
+			return err
+		}
+
+		return l.EnforcerService.LoadPolicy()
+	})
 }

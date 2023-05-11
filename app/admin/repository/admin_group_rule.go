@@ -55,3 +55,7 @@ func (r *AdminGroupRule) RuleIdByGroupId(ctx context.Context, groupId uint64) ([
 	}
 	return ruleId, nil
 }
+
+func (r *AdminGroupRule) DeleteByGroupId(ctx context.Context, groupId uint64) error {
+	return db.Session(ctx).Where("group_id = @groupId", sql.Named("groupId", groupId)).Delete(&model.AdminGroupRule{}).Error
+}

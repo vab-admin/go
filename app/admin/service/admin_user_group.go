@@ -8,8 +8,8 @@ import (
 )
 
 type AdminUserGroup struct {
-	AdminUserGroupRepo *repository.AdminUserGroup
 	AdminGroupRepo     *repository.AdminGroup
+	AdminUserGroupRepo *repository.AdminUserGroup
 }
 
 // Create
@@ -64,4 +64,12 @@ func (s *AdminUserGroup) Update(ctx context.Context, userId uint64, groupId ...u
 	}
 
 	return nil
+}
+
+// Delete
+// @param ctx
+// @param userId
+// @date 2023-05-11 21:12:52
+func (s *AdminUserGroup) Delete(ctx context.Context, userId uint64) error {
+	return s.AdminUserGroupRepo.DeleteByUserId(ctx, userId)
 }

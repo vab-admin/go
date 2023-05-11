@@ -7,6 +7,7 @@ import (
 
 type (
 	AdminGroupQueryRequest struct {
+		Name string `query:"name"`
 	}
 
 	AdminGroupCreateRequest struct {

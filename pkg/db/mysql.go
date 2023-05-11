@@ -135,6 +135,9 @@ func Transaction(ctx context.Context, fc func(context.Context) error) error {
 	})
 }
 
+// Instance
+// @param ctx
+// @date 2023-05-11 21:03:34
 func Instance(ctx context.Context) *gorm.DB {
 	return db.WithContext(ctx)
 }
