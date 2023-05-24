@@ -98,10 +98,10 @@ func (h *AdminRule) Delete(c echo.Context) error {
 	return httpx.OK(c, "删除成功")
 }
 
-// Tree
+// Query
 // @param c
 // @date 2023-05-11 00:41:09
-func (h *AdminRule) Tree(c echo.Context) error {
+func (h *AdminRule) Query(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	result, err := h.AdminRuleService.Tree(ctx)

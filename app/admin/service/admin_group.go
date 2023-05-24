@@ -10,33 +10,33 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
-type AdminGroup struct {
-	EnforcerService       *Enforcer
-	AdminGroupRuleService *AdminGroupRule
-	AdminGroupRepo        *repository.AdminGroup
+type AdminRole struct {
+	EnforcerService      *Enforcer
+	AdminRoleRuleService *AdminRoleRule
+	AdminRoleRepo        *repository.AdminRole
 }
 
 // Query
 // @param ctx
 // @param req
 // @date 2023-05-10 20:41:32
-func (l *AdminGroup) Query(ctx context.Context, req *schema.AdminGroupQueryRequest) ([]*model.AdminGroup, error) {
+func (l *AdminRole) Query(ctx context.Context, req *schema.AdminRoleQueryRequest) ([]*model.AdminRole, error) {
 
-	return l.AdminGroupRepo.Query(ctx, req)
+	return l.AdminRoleRepo.Query(ctx, req)
 }
 
 // Create
 // @param ctx
 // @param req
 // @date 2023-05-10 20:41:31
-func (l *AdminGroup) Create(ctx context.Context, req *schema.AdminGroupCreateRequest) error {
+func (l *AdminRole) Create(ctx context.Context, req *schema.AdminRoleCreateRequest) error {
 	if err := req.Validate(); err != nil {
 		return err
 	}
 
 	now := tea.Int64(time.Now().Unix())
 
-	m := &model.AdminGroup{
+	m := &model.AdminRole{
 		Name:      tea.String(req.Name),
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -44,11 +44,11 @@ func (l *AdminGroup) Create(ctx context.Context, req *schema.AdminGroupCreateReq
 
 	return db.Transaction(ctx, func(ctx context.Context) error {
 
-		if err := l.AdminGroupRepo.Create(ctx, m); err != nil {
+		if err := l.AdminRoleRepo.Create(ctx, m); err != nil {
 			return err
 		}
 
-		if err := l.AdminGroupRuleService.Create(ctx, m.GetId(), req.Rules...); err != nil {
+		if err := l.AdminRoleRuleService.Create(ctx, m.GetId(), req.Rules...); err != nil {
 			return err
 		}
 
@@ -60,36 +60,36 @@ func (l *AdminGroup) Create(ctx context.Context, req *schema.AdminGroupCreateReq
 // @param ctx
 // @param req
 // @date 2023-05-10 20:41:31
-func (l *AdminGroup) Edit(ctx context.Context, req *schema.AdminGroupEditRequest) (*model.AdminGroup, error) {
+func (l *AdminRole) Edit(ctx context.Context, req *schema.AdminRoleEditRequest) (*model.AdminRole, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 
-	return l.AdminGroupRepo.Edit(ctx, req.Id)
+	return l.AdminRoleRepo.Edit(ctx, req.Id)
 }
 
 // Update
 // @param ctx
 // @param req
 // @date 2023-05-10 20:41:30
-func (l *AdminGroup) Update(ctx context.Context, req *schema.AdminGroupUpdateRequest) error {
+func (l *AdminRole) Update(ctx context.Context, req *schema.AdminRoleUpdateRequest) error {
 	if err := req.Validate(); err != nil {
 		return err
 	}
 
 	now := tea.Int64(time.Now().Unix())
 
-	m := &model.AdminGroup{
+	m := &model.AdminRole{
 		Name:      tea.String(req.Name),
 		UpdatedAt: now,
 	}
 
 	return db.Transaction(ctx, func(ctx context.Context) error {
-		if err := l.AdminGroupRepo.Update(ctx, req.Id, m); err != nil {
+		if err := l.AdminRoleRepo.Update(ctx, req.Id, m); err != nil {
 			return err
 		}
 
-		if err := l.AdminGroupRuleService.Update(ctx, req.Id, req.Rules...); err != nil {
+		if err := l.AdminRoleRuleService.Update(ctx, req.Id, req.Rules...); err != nil {
 			return err
 		}
 
@@ -101,18 +101,18 @@ func (l *AdminGroup) Update(ctx context.Context, req *schema.AdminGroupUpdateReq
 // @param ctx
 // @param req
 // @date 2023-05-10 20:41:29
-func (l *AdminGroup) Delete(ctx context.Context, req *schema.AdminGroupDeleteRequest) error {
+func (l *AdminRole) Delete(ctx context.Context, req *schema.AdminRoleDeleteRequest) error {
 
 	if err := req.Validate(); err != nil {
 		return err
 	}
 
 	return db.Transaction(ctx, func(ctx context.Context) error {
-		if err := l.AdminGroupRepo.Delete(ctx, req.Id); err != nil {
+		if err := l.AdminRoleRepo.Delete(ctx, req.Id); err != nil {
 			return err
 		}
 
-		if err := l.AdminGroupRuleService.DeleteByGroupId(ctx, req.Id); err != nil {
+		if err := l.AdminRoleRuleService.DeleteByRoleId(ctx, req.Id); err != nil {
 			return err
 		}
 

@@ -4,8 +4,10 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"vab-admin/go/app/admin/handler"
+	middleware2 "vab-admin/go/app/admin/middleware"
 	"vab-admin/go/app/admin/service"
 	"vab-admin/go/pkg/errors"
 )
@@ -14,10 +16,18 @@ type Route struct {
 	errorsMap map[string]echo.HandlerFunc `wire:"-"`
 	Enforcer  *service.Enforcer
 
-	AdminUserHandler  *handler.AdminUser
-	AdminRuleHandler  *handler.AdminRule
-	AdminGroupHandler *handler.AdminGroup
-	SystemApiHandler  *handler.SystemApi
+	AdminUserHandler *handler.AdminUser
+	AdminRuleHandler *handler.AdminRule
+	AdminRoleHandler *handler.AdminRole
+	SystemApiHandler *handler.SystemApi
+}
+
+type IRoute interface {
+	Query(ctx echo.Context) error
+	Create(ctx echo.Context) error
+	Edit(ctx echo.Context) error
+	Update(ctx echo.Context) error
+	Delete(ctx echo.Context) error
 }
 
 // OnError
@@ -73,10 +83,29 @@ func (r *Route) RegisterHandlers(app *echo.Echo) {
 	)
 
 	v1Pub := app.Group("/api/v1")
-	v1Auth := app.Group("/api/v1") //middleware2.Casbin(r.Enforcer),
+	v1Auth := app.Group("/api/v1",
+		middleware2.JwtAuth(),
+	)
 
 	r.Api(v1Auth)
 
 	v1Pub.POST("/login", r.AdminUserHandler.Login)
 
+}
+
+func apiRouters(name, prefix string, api *echo.Group, handler IRoute) {
+
+	routers := []echo.Route{
+		{Method: http.MethodGet, Path: prefix, Handler: handler.Query, Name: "查询" + name},
+		{Method: http.MethodPost, Path: prefix, Handler: handler.Create, Name: "创建" + name},
+		{Method: http.MethodGet, Path: prefix + "/:id/edit", Handler: handler.Edit, Name: "编辑" + name},
+		{Method: http.MethodPut, Path: prefix + "/:id", Handler: handler.Update, Name: "更新" + name},
+		{Method: http.MethodDelete, Path: prefix + "/:id", Handler: handler.Delete, Name: "删除" + name},
+	}
+
+	for _, router := range routers {
+		if _, err := api.AddRoute(router); err != nil {
+			log.WithError(err).Fatal("添加路由失败")
+		}
+	}
 }

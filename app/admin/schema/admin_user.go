@@ -52,7 +52,7 @@ type (
 		Password string   `json:"password"`
 		Nickname string   `json:"nickname"`
 		Mobile   string   `json:"mobile"`
-		Groups   []uint64 `json:"groups"`
+		Roles    []uint64 `json:"roles"`
 	}
 
 	// AdminUserEditRequest 编辑管理员请求

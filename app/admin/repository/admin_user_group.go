@@ -9,14 +9,14 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
-type AdminUserGroup struct{}
+type AdminUserRole struct{}
 
 // Create
 // @param ctx
-// @param userGroup
+// @param userRole
 // @date 2023-05-11 00:03:28
-func (*AdminUserGroup) Create(ctx context.Context, userGroup ...*model.AdminUserGroup) error {
-	tx := db.Instance(ctx).Create(userGroup)
+func (*AdminUserRole) Create(ctx context.Context, userRole ...*model.AdminUserRole) error {
+	tx := db.Instance(ctx).Create(userRole)
 	if err := tx.Error; err != nil {
 		return errors.ErrInternalServer
 	}
@@ -24,30 +24,30 @@ func (*AdminUserGroup) Create(ctx context.Context, userGroup ...*model.AdminUser
 	return nil
 }
 
-// GroupIdByUserId
+// RoleIdByUserId
 // @param ctx
 // @param userId
 // @date 2023-05-11 00:06:08
-func (r *AdminUserGroup) GroupIdByUserId(ctx context.Context, userId uint64) ([]uint64, error) {
-	var groupId []uint64
-	tx := db.Instance(ctx).Model(&model.AdminUserGroup{}).Where("user_id = @userId", sql.Named("userId", userId)).Pluck("group_id", &groupId)
+func (r *AdminUserRole) RoleIdByUserId(ctx context.Context, userId uint64) ([]uint64, error) {
+	var roleId []uint64
+	tx := db.Instance(ctx).Model(&model.AdminUserRole{}).Where("user_id = @userId", sql.Named("userId", userId)).Pluck("role_id", &roleId)
 	if err := tx.Error; err != nil {
-		log.WithError(err).Error("根据规则groupId获取有的RuleId失败")
+		log.WithError(err).Error("根据规则roleId获取有的RuleId失败")
 		return nil, errors.ErrInternalServer
 	}
-	return groupId, nil
+	return roleId, nil
 }
 
-// DeleteByUserIdWithGroupId
+// DeleteByUserIdWithRoleId
 // @param ctx
 // @param userId
-// @param groupId
+// @param roleId
 // @date 2023-05-11 00:12:35
-func (r *AdminUserGroup) DeleteByUserIdWithGroupId(ctx context.Context, userId uint64, groupId ...uint64) error {
-	tx := db.Instance(ctx).Where("user_id = @userId AND group_id IN @groupId",
+func (r *AdminUserRole) DeleteByUserIdWithRoleId(ctx context.Context, userId uint64, roleId ...uint64) error {
+	tx := db.Instance(ctx).Where("user_id = @userId AND role_id IN @roleId",
 		sql.Named("userId", userId),
-		sql.Named("groupId", groupId),
-	).Delete(&model.AdminUserGroup{})
+		sql.Named("roleId", roleId),
+	).Delete(&model.AdminUserRole{})
 
 	if err := tx.Error; err != nil {
 		return errors.ErrInternalServer
@@ -60,6 +60,6 @@ func (r *AdminUserGroup) DeleteByUserIdWithGroupId(ctx context.Context, userId u
 // @param ctx
 // @param userId
 // @date 2023-05-11 21:12:23
-func (r *AdminUserGroup) DeleteByUserId(ctx context.Context, userId uint64) error {
-	return db.Session(ctx).Where("user_id IN @userId", sql.Named("userId", userId)).Delete(&model.AdminUserGroup{}).Error
+func (r *AdminUserRole) DeleteByUserId(ctx context.Context, userId uint64) error {
+	return db.Session(ctx).Where("user_id IN @userId", sql.Named("userId", userId)).Delete(&model.AdminUserRole{}).Error
 }

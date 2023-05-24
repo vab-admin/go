@@ -7,20 +7,20 @@ import (
 	"vab-admin/go/pkg/httpx"
 )
 
-type AdminGroup struct {
-	AdminGroupService *service.AdminGroup
+type AdminRole struct {
+	AdminRoleService *service.AdminRole
 }
 
 // Query
 // @date: 2023/05/10 20:34:51
-func (h *AdminGroup) Query(c echo.Context) error {
-	req := &schema.AdminGroupQueryRequest{}
+func (h *AdminRole) Query(c echo.Context) error {
+	req := &schema.AdminRoleQueryRequest{}
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
 
 	ctx := c.Request().Context()
-	resp, err := h.AdminGroupService.Query(ctx, req)
+	resp, err := h.AdminRoleService.Query(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -30,13 +30,13 @@ func (h *AdminGroup) Query(c echo.Context) error {
 
 // Create
 // @date: 2023/05/10 20:34:51
-func (h *AdminGroup) Create(c echo.Context) error {
-	req := &schema.AdminGroupCreateRequest{}
+func (h *AdminRole) Create(c echo.Context) error {
+	req := &schema.AdminRoleCreateRequest{}
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
 	ctx := c.Request().Context()
-	if err := h.AdminGroupService.Create(ctx, req); err != nil {
+	if err := h.AdminRoleService.Create(ctx, req); err != nil {
 		return err
 	}
 
@@ -45,14 +45,14 @@ func (h *AdminGroup) Create(c echo.Context) error {
 
 // Edit
 // @date: 2023/05/10 20:34:51
-func (h *AdminGroup) Edit(c echo.Context) error {
-	req := &schema.AdminGroupEditRequest{}
+func (h *AdminRole) Edit(c echo.Context) error {
+	req := &schema.AdminRoleEditRequest{}
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
 
 	ctx := c.Request().Context()
-	resp, err := h.AdminGroupService.Edit(ctx, req)
+	resp, err := h.AdminRoleService.Edit(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -62,13 +62,13 @@ func (h *AdminGroup) Edit(c echo.Context) error {
 
 // Update
 // @date: 2023/05/10 20:34:51
-func (h *AdminGroup) Update(c echo.Context) error {
-	req := &schema.AdminGroupUpdateRequest{}
+func (h *AdminRole) Update(c echo.Context) error {
+	req := &schema.AdminRoleUpdateRequest{}
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
 	ctx := c.Request().Context()
-	if err := h.AdminGroupService.Update(ctx, req); err != nil {
+	if err := h.AdminRoleService.Update(ctx, req); err != nil {
 		return err
 	}
 
@@ -77,13 +77,14 @@ func (h *AdminGroup) Update(c echo.Context) error {
 
 // Delete
 // @date: 2023/05/10 20:34:51
-func (h *AdminGroup) Delete(c echo.Context) error {
-	req := &schema.AdminGroupDeleteRequest{}
+func (h *AdminRole) Delete(c echo.Context) error {
+	req := &schema.AdminRoleDeleteRequest{}
 	if err := httpx.Bind(c, req); err != nil {
 		return err
 	}
+
 	ctx := c.Request().Context()
-	if err := h.AdminGroupService.Delete(ctx, req); err != nil {
+	if err := h.AdminRoleService.Delete(ctx, req); err != nil {
 		return err
 	}
 

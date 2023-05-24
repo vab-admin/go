@@ -1,10 +1,10 @@
 package model
 
-type AdminUserGroup struct {
-	UserID  uint64 `gorm:"index;default:0;"`
-	GroupID uint64 `gorm:"index;default:0;"`
+type AdminUserRole struct {
+	UserID uint64 `gorm:"index;default:0;"`
+	RoleID uint64 `gorm:"index;default:0;"`
 }
 
-func (*AdminUserGroup) TableName() string {
-	return "admin_user_groups"
+func (*AdminUserRole) TableName() string {
+	return "admin_user_roles"
 }

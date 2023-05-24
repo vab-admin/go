@@ -1,7 +1,7 @@
 package jwtauth
 
 import (
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"time"
 )
 
@@ -12,7 +12,7 @@ type (
 
 	UserInfoClaims struct {
 		UserInfo
-		jwt.StandardClaims
+		jwt.RegisteredClaims
 	}
 )
 
@@ -23,8 +23,8 @@ type (
 func CreateToken(secret string, userinfo UserInfo) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &UserInfoClaims{
 		UserInfo: userinfo,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 24 * 30).Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 30)),
 		},
 	})
 	return token.SignedString([]byte(secret))

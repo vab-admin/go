@@ -7,6 +7,7 @@ import (
 	"vab-admin/go/app/admin/repository"
 	"vab-admin/go/app/admin/schema"
 	"vab-admin/go/pkg/auth/jwtauth"
+	"vab-admin/go/pkg/contextx"
 	"vab-admin/go/pkg/db"
 	"vab-admin/go/pkg/errors"
 	"vab-admin/go/pkg/model"
@@ -15,9 +16,9 @@ import (
 )
 
 type AdminUser struct {
-	EnforcerService       *Enforcer
-	AdminUserGroupService *AdminUserGroup
-	AdminUserRepo         *repository.AdminUser
+	EnforcerService      *Enforcer
+	AdminUserRoleService *AdminUserRole
+	AdminUserRepo        *repository.AdminUser
 }
 
 // Login
@@ -39,7 +40,7 @@ func (s *AdminUser) Login(ctx context.Context, req *schema.AdminUserLoginRequest
 	}
 
 	var token string
-	if token, err = jwtauth.CreateToken("", jwtauth.UserInfo{UserID: user.GetId()}); err != nil {
+	if token, err = jwtauth.CreateToken("api", jwtauth.UserInfo{UserID: user.GetId()}); err != nil {
 		return nil, err
 	}
 
@@ -72,7 +73,7 @@ func (s *AdminUser) Create(ctx context.Context, req *schema.AdminUserCreateReque
 			return err
 		}
 
-		if err := s.AdminUserGroupService.Create(ctx, user.GetId(), req.Groups...); err != nil {
+		if err := s.AdminUserRoleService.Create(ctx, user.GetId(), req.Roles...); err != nil {
 			return err
 		}
 
@@ -123,7 +124,7 @@ func (s *AdminUser) Update(ctx context.Context, req *schema.AdminUserUpdateReque
 			return err
 		}
 
-		if err := s.AdminUserGroupService.Update(ctx, req.ID, req.Groups...); err != nil {
+		if err := s.AdminUserRoleService.Update(ctx, req.ID, req.Roles...); err != nil {
 			return err
 		}
 
@@ -150,11 +151,17 @@ func (s *AdminUser) Delete(ctx context.Context, req *schema.AdminUserDeleteReque
 			return errors.ErrInternalServer
 		}
 
-		if err = s.AdminUserGroupService.Delete(ctx, req.ID); err != nil {
+		if err = s.AdminUserRoleService.Delete(ctx, req.ID); err != nil {
 			return errors.ErrInternalServer
 		}
 
 		return s.EnforcerService.LoadPolicy()
 	})
 
+}
+
+func (s *AdminUser) Router(ctx context.Context) ([]*model.AdminRule, error) {
+	userId := contextx.FromUserID(ctx)
+
+	return s.AdminUserRepo.Router(ctx, userId)
 }

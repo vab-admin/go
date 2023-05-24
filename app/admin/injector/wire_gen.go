@@ -23,17 +23,18 @@ func CreateApp(conf config.Config) (*Injector, error) {
 	if err != nil {
 		return nil, err
 	}
-	adminGroup := &repository.AdminGroup{}
-	adminUserGroup := &repository.AdminUserGroup{}
-	serviceAdminUserGroup := &service.AdminUserGroup{
-		AdminGroupRepo:     adminGroup,
-		AdminUserGroupRepo: adminUserGroup,
+	app := &handler.App{}
+	adminRole := &repository.AdminRole{}
+	adminUserRole := &repository.AdminUserRole{}
+	serviceAdminUserRole := &service.AdminUserRole{
+		AdminRoleRepo:     adminRole,
+		AdminUserRoleRepo: adminUserRole,
 	}
 	adminUser := &repository.AdminUser{}
 	serviceAdminUser := &service.AdminUser{
-		EnforcerService:       enforcer,
-		AdminUserGroupService: serviceAdminUserGroup,
-		AdminUserRepo:         adminUser,
+		EnforcerService:      enforcer,
+		AdminUserRoleService: serviceAdminUserRole,
+		AdminUserRepo:        adminUser,
 	}
 	handlerAdminUser := handler.NewAdminUser(serviceAdminUser)
 	systemApi := &repository.SystemApi{}
@@ -51,18 +52,18 @@ func CreateApp(conf config.Config) (*Injector, error) {
 	handlerAdminRule := &handler.AdminRule{
 		AdminRuleService: serviceAdminRule,
 	}
-	adminGroupRule := &repository.AdminGroupRule{}
-	serviceAdminGroupRule := &service.AdminGroupRule{
-		AdminRuleRepo:      adminRule,
-		AdminGroupRuleRepo: adminGroupRule,
+	adminRoleRule := &repository.AdminRoleRule{}
+	serviceAdminRoleRule := &service.AdminRoleRule{
+		AdminRuleRepo:     adminRule,
+		AdminRoleRuleRepo: adminRoleRule,
 	}
-	serviceAdminGroup := &service.AdminGroup{
-		EnforcerService:       enforcer,
-		AdminGroupRuleService: serviceAdminGroupRule,
-		AdminGroupRepo:        adminGroup,
+	serviceAdminRole := &service.AdminRole{
+		EnforcerService:      enforcer,
+		AdminRoleRuleService: serviceAdminRoleRule,
+		AdminRoleRepo:        adminRole,
 	}
-	handlerAdminGroup := &handler.AdminGroup{
-		AdminGroupService: serviceAdminGroup,
+	handlerAdminRole := &handler.AdminRole{
+		AdminRoleService: serviceAdminRole,
 	}
 	serviceSystemApi := &service.SystemApi{
 		SystemApiRepo: systemApi,
@@ -71,11 +72,12 @@ func CreateApp(conf config.Config) (*Injector, error) {
 		SystemApiService: serviceSystemApi,
 	}
 	route := &router.Route{
-		Enforcer:          enforcer,
-		AdminUserHandler:  handlerAdminUser,
-		AdminRuleHandler:  handlerAdminRule,
-		AdminGroupHandler: handlerAdminGroup,
-		SystemApiHandler:  handlerSystemApi,
+		Enforcer:         enforcer,
+		AppHandler:       app,
+		AdminUserHandler: handlerAdminUser,
+		AdminRuleHandler: handlerAdminRule,
+		AdminRoleHandler: handlerAdminRole,
+		SystemApiHandler: handlerSystemApi,
 	}
 	echo := newApp(route)
 	injector := &Injector{

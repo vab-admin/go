@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/elliotchance/pie/v2"
 	"github.com/thoas/go-funk"
 	"vab-admin/go/app/admin/repository"
@@ -103,7 +104,7 @@ func (l *AdminRule) Update(ctx context.Context, req *schema.AdminRuleUpdateReque
 		if err = l.AdminRuleRepo.Update(ctx, req.Id, m); err != nil {
 			return err
 		}
-
+		fmt.Println("更新菜单")
 		return l.AdminRuleApiService.Update(ctx, req.Id, req.Apis...)
 	})
 }

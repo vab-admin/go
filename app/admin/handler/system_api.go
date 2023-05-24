@@ -102,6 +102,9 @@ func (h *SystemApi) Delete(c echo.Context) error {
 	return httpx.OK(c, "删除成功")
 }
 
+// All
+// @param c
+// @date 2023-05-24 00:14:50
 func (h *SystemApi) All(c echo.Context) error {
 	ctx := c.Request().Context()
 

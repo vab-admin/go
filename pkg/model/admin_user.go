@@ -13,7 +13,7 @@ type AdminUser struct {
 	CreatedAt *int64  `gorm:"comment:创建时间" json:"createdAt,omitempty"`
 	UpdatedAt *int64  `gorm:"comment:更新时间" json:"updatedAt,omitempty"`
 
-	Groups []*AdminGroup `gorm:"many2many:AdminUserGroup;foreignKey:ID;joinForeignKey:UserID;References:ID;joinReferences:GroupID" json:"groups,omitempty"`
+	Roles []*AdminRole `gorm:"many2many:AdminUserRole;foreignKey:ID;joinForeignKey:UserID;References:ID;joinReferences:RoleID" json:"roles,omitempty"`
 }
 
 func (*AdminUser) TableName() string { return "admin_users" }

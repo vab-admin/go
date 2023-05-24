@@ -23,24 +23,24 @@ func CreateApp(conf config.Config) (*Injector, error) {
 
 		wire.NewSet(handler.NewAdminUser),
 		wire.NewSet(wire.Struct(new(handler.AdminRule), "*")),
-		wire.NewSet(wire.Struct(new(handler.AdminGroup), "*")),
+		wire.NewSet(wire.Struct(new(handler.AdminRole), "*")),
 		wire.NewSet(wire.Struct(new(handler.SystemApi), "*")),
 
 		wire.NewSet(wire.Struct(new(service.AdminUser), "*")),
 		wire.NewSet(wire.Struct(new(service.AdminRule), "*")),
-		wire.NewSet(wire.Struct(new(service.AdminUserGroup), "*")),
-		wire.NewSet(wire.Struct(new(service.AdminGroup), "*")),
-		wire.NewSet(wire.Struct(new(service.AdminGroupRule), "*")),
+		wire.NewSet(wire.Struct(new(service.AdminRole), "*")),
 		wire.NewSet(wire.Struct(new(service.SystemApi), "*")),
 		wire.NewSet(wire.Struct(new(service.AdminRuleApi), "*")),
+		wire.NewSet(wire.Struct(new(service.AdminUserRole), "*")),
+		wire.NewSet(wire.Struct(new(service.AdminRoleRule), "*")),
 
 		wire.NewSet(wire.Struct(new(repository.AdminUser), "*")),
-		wire.NewSet(wire.Struct(new(repository.AdminRuleApi), "*")),
-		wire.NewSet(wire.Struct(new(repository.AdminUserGroup), "*")),
 		wire.NewSet(wire.Struct(new(repository.AdminRule), "*")),
-		wire.NewSet(wire.Struct(new(repository.AdminGroup), "*")),
-		wire.NewSet(wire.Struct(new(repository.AdminGroupRule), "*")),
+		wire.NewSet(wire.Struct(new(repository.AdminRole), "*")),
 		wire.NewSet(wire.Struct(new(repository.SystemApi), "*")),
+		wire.NewSet(wire.Struct(new(repository.AdminRuleApi), "*")),
+		wire.NewSet(wire.Struct(new(repository.AdminUserRole), "*")),
+		wire.NewSet(wire.Struct(new(repository.AdminRoleRule), "*")),
 	)
 
 	return new(Injector), nil

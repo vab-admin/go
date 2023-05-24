@@ -94,7 +94,7 @@ func (*AdminUser) Edit(ctx context.Context, id uint64) (*model.AdminUser, error)
 	tx := db.Instance(ctx).
 		Model(&model.AdminUser{}).
 		Select([]string{"account", "nickname", "mobile", "id"}).
-		Preload("Groups", func(tx *gorm.DB) *gorm.DB {
+		Preload("Roles", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select([]string{"id", "name"})
 		}).
 		Where("id = @id", sql.Named("id", id)).
@@ -124,6 +124,10 @@ func (u *AdminUser) Update(ctx context.Context, id uint64, user *model.AdminUser
 	return nil
 }
 
+// ByDeleteId
+// @param ctx
+// @param userId
+// @date 2023-05-12 00:07:43
 func (*AdminUser) ByDeleteId(ctx context.Context, userId uint64) (*model.AdminUser, error) {
 	row := &model.AdminUser{}
 	tx := db.Instance(ctx).
@@ -143,6 +147,21 @@ func (*AdminUser) ByDeleteId(ctx context.Context, userId uint64) (*model.AdminUs
 	return row, nil
 }
 
+// DeleteById
+// @param ctx
+// @param id
+// @date 2023-05-12 00:07:45
 func (u *AdminUser) DeleteById(ctx context.Context, id uint64) error {
 	return db.Session(ctx).Where("id = @id", sql.Named("id", id)).Limit(1).Delete(&model.AdminUser{}).Error
+}
+
+// Router
+// @param ctx
+// @param id
+// @date 2023-05-17 17:12:32
+func (u *AdminUser) Router(ctx context.Context, userId uint64) ([]*model.AdminRule, error) {
+	tx := db.Session(ctx).Model(&model.AdminRule{}).Order("sort ASC")
+	if userId > 1 {
+		db.Instance(ctx).Model(&model.AdminUserRole{}).Where("user_id = @userId", sql.Named("userId", userId))
+	}
 }

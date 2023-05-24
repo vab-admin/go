@@ -12,19 +12,19 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
-type AdminGroup struct {
+type AdminRole struct {
 }
 
 var (
-	ErrAdminGroupNotFound = errors.New("不存在的分组")
+	ErrAdminRoleNotFound = errors.New("不存在的分组")
 )
 
 // Query
 // @date: 2023/05/10 20:35:43
-func (r *AdminGroup) Query(ctx context.Context, req *schema.AdminGroupQueryRequest) ([]*model.AdminGroup, error) {
-	var rows []*model.AdminGroup
+func (r *AdminRole) Query(ctx context.Context, req *schema.AdminRoleQueryRequest) ([]*model.AdminRole, error) {
+	var rows []*model.AdminRole
 
-	tx := db.Instance(ctx).Model(&model.AdminGroup{}).Select([]string{"id", "name", "created_at", "updated_at"}).Order("created_at DESC")
+	tx := db.Instance(ctx).Model(&model.AdminRole{}).Select([]string{"id", "name", "created_at", "updated_at"}).Order("created_at DESC")
 
 	if v := req.Name; v != "" {
 		tx.Where("name = @name", sql.Named("name", strings.TrimSpace(v)))
@@ -41,10 +41,10 @@ func (r *AdminGroup) Query(ctx context.Context, req *schema.AdminGroupQueryReque
 
 // Edit
 // @date: 2023/05/10 20:35:43
-func (r *AdminGroup) Edit(ctx context.Context, id uint64) (*model.AdminGroup, error) {
-	row := &model.AdminGroup{}
+func (r *AdminRole) Edit(ctx context.Context, id uint64) (*model.AdminRole, error) {
+	row := &model.AdminRole{}
 
-	tx := db.Instance(ctx).Model(&model.AdminGroup{}).
+	tx := db.Instance(ctx).Model(&model.AdminRole{}).
 		Preload("Rules", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select([]string{"id", "name"})
 		}).
@@ -57,7 +57,7 @@ func (r *AdminGroup) Edit(ctx context.Context, id uint64) (*model.AdminGroup, er
 	}
 
 	if tx.RowsAffected == 0 {
-		return nil, ErrAdminGroupNotFound
+		return nil, ErrAdminRoleNotFound
 	}
 
 	return row, nil
@@ -65,8 +65,8 @@ func (r *AdminGroup) Edit(ctx context.Context, id uint64) (*model.AdminGroup, er
 
 // Delete
 // @date: 2023/05/10 20:35:43
-func (r *AdminGroup) Delete(ctx context.Context, id uint64) error {
-	err := db.Session(ctx).Where("id = @id", sql.Named("id", id)).Delete(&model.AdminGroup{}).Error
+func (r *AdminRole) Delete(ctx context.Context, id uint64) error {
+	err := db.Session(ctx).Where("id = @id", sql.Named("id", id)).Delete(&model.AdminRole{}).Error
 	if err != nil {
 		log.WithError(err).Error("删除分组失败")
 		return errors.ErrInternalServer
@@ -76,7 +76,7 @@ func (r *AdminGroup) Delete(ctx context.Context, id uint64) error {
 
 // Update
 // @date: 2023/05/10 20:35:43
-func (r *AdminGroup) Update(ctx context.Context, id uint64, m *model.AdminGroup) error {
+func (r *AdminRole) Update(ctx context.Context, id uint64, m *model.AdminRole) error {
 	if err := db.Session(ctx).Where("id = @id", sql.Named("id", id)).Updates(m).Error; err != nil {
 		log.WithError(err).WithField("id", id).Error("更新分组失败")
 		return errors.ErrInternalServer
@@ -86,7 +86,7 @@ func (r *AdminGroup) Update(ctx context.Context, id uint64, m *model.AdminGroup)
 
 // Create
 // @date: 2023/05/10 20:35:43
-func (r *AdminGroup) Create(ctx context.Context, m *model.AdminGroup) error {
+func (r *AdminRole) Create(ctx context.Context, m *model.AdminRole) error {
 	if err := db.Session(ctx).Create(m).Error; err != nil {
 		log.WithError(err).Error("创建分组失败")
 		return errors.ErrInternalServer
@@ -98,9 +98,9 @@ func (r *AdminGroup) Create(ctx context.Context, m *model.AdminGroup) error {
 // @param ctx
 // @param ids
 // @date 2023-05-11 00:40:25
-func (r *AdminGroup) IdsByIds(ctx context.Context, ids ...uint64) ([]uint64, error) {
+func (r *AdminRole) IdsByIds(ctx context.Context, ids ...uint64) ([]uint64, error) {
 	var newIds []uint64
-	tx := db.Instance(ctx).Model(&model.AdminGroup{}).Where("id IN @ids", sql.Named("ids", ids)).Pluck("id", &newIds)
+	tx := db.Instance(ctx).Model(&model.AdminRole{}).Where("id IN @ids", sql.Named("ids", ids)).Pluck("id", &newIds)
 	if err := tx.Error; err != nil {
 		log.WithError(err).Error("根据规则id获取存在的角色id失败")
 		return nil, errors.ErrInternalServer

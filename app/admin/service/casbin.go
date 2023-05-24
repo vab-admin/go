@@ -61,15 +61,15 @@ func (c *CasbinAdapter) RemoveFilteredPolicy(sec string, _ string, fieldIndex in
 func (c *CasbinAdapter) loadUserPolicy(ctx context.Context, m model.Model) error {
 	log.Debug("loadUserPolicy")
 
-	var rows []*model2.AdminUserGroup
-	tx := db.Session(ctx).Model(&model2.AdminUserGroup{}).Select([]string{"user_id", "group_id"}).Find(&rows)
+	var rows []*model2.AdminUserRole
+	tx := db.Session(ctx).Model(&model2.AdminUserRole{}).Select([]string{"user_id", "role_id"}).Find(&rows)
 	if err := tx.Error; err != nil {
 		log.WithError(err).Error("获取用户角色失败")
 		return err
 	}
 
 	for _, row := range rows {
-		line := fmt.Sprintf("g,%d,%d", row.UserID, row.GroupID)
+		line := fmt.Sprintf("g,%d,%d", row.UserID, row.RoleID)
 		_ = persist.LoadPolicyLine(line, m)
 	}
 
@@ -79,9 +79,9 @@ func (c *CasbinAdapter) loadUserPolicy(ctx context.Context, m model.Model) error
 // loadRolePolicy Load role policy (p,role_id,path,method)
 func (c *CasbinAdapter) loadRolePolicy(ctx context.Context, m model.Model) error {
 
-	var groups []*model2.AdminGroup
+	var groups []*model2.AdminRole
 
-	db.Session(ctx).Model(&model2.AdminGroup{}).Preload("Rules").Find(&groups)
+	db.Session(ctx).Model(&model2.AdminRole{}).Preload("Rules").Find(&groups)
 
 	for _, group := range groups {
 		for _, rule := range group.Rules {

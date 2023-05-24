@@ -9,14 +9,14 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
-type AdminGroupRule struct{}
+type AdminRoleRule struct{}
 
 // Create
 // @param ctx
-// @param groupRule
+// @param roleRule
 // @date 2023-05-11 00:40:33
-func (*AdminGroupRule) Create(ctx context.Context, groupRule ...*model.AdminGroupRule) error {
-	tx := db.Instance(ctx).Create(groupRule)
+func (*AdminRoleRule) Create(ctx context.Context, roleRule ...*model.AdminRoleRule) error {
+	tx := db.Instance(ctx).Create(roleRule)
 	if err := tx.Error; err != nil {
 		return errors.ErrInternalServer
 	}
@@ -24,16 +24,16 @@ func (*AdminGroupRule) Create(ctx context.Context, groupRule ...*model.AdminGrou
 	return nil
 }
 
-// DeleteByGroupIdWithRuleId
+// DeleteByRoleIdWithRuleId
 // @param ctx
-// @param groupId
+// @param roleId
 // @param ruleId
 // @date 2023-05-11 00:40:32
-func (r *AdminGroupRule) DeleteByGroupIdWithRuleId(ctx context.Context, groupId uint64, ruleId ...uint64) error {
-	tx := db.Instance(ctx).Where("group_id = @groupId AND rule_id IN @ruleId",
-		sql.Named("groupId", groupId),
+func (r *AdminRoleRule) DeleteByRoleIdWithRuleId(ctx context.Context, roleId uint64, ruleId ...uint64) error {
+	tx := db.Instance(ctx).Where("role_id = @roleId AND rule_id IN @ruleId",
+		sql.Named("roleId", roleId),
 		sql.Named("ruleId", ruleId),
-	).Delete(&model.AdminGroupRule{})
+	).Delete(&model.AdminRoleRule{})
 
 	if err := tx.Error; err != nil {
 		return errors.ErrInternalServer
@@ -42,20 +42,20 @@ func (r *AdminGroupRule) DeleteByGroupIdWithRuleId(ctx context.Context, groupId 
 	return nil
 }
 
-// RuleIdByGroupId
+// RuleIdByRoleId
 // @param ctx
-// @param groupId
+// @param roleId
 // @date 2023-05-11 00:40:31
-func (r *AdminGroupRule) RuleIdByGroupId(ctx context.Context, groupId uint64) ([]uint64, error) {
+func (r *AdminRoleRule) RuleIdByRoleId(ctx context.Context, roleId uint64) ([]uint64, error) {
 	var ruleId []uint64
-	tx := db.Instance(ctx).Model(&model.AdminGroupRule{}).Where("group_id = @groupId", sql.Named("groupId", groupId)).Pluck("rule_id", &ruleId)
+	tx := db.Instance(ctx).Model(&model.AdminRoleRule{}).Where("role_id = @roleId", sql.Named("roleId", roleId)).Pluck("rule_id", &ruleId)
 	if err := tx.Error; err != nil {
-		log.WithError(err).Error("根据规则groupId获取有的RuleId失败")
+		log.WithError(err).Error("根据规则roleId获取有的RuleId失败")
 		return nil, errors.ErrInternalServer
 	}
 	return ruleId, nil
 }
 
-func (r *AdminGroupRule) DeleteByGroupId(ctx context.Context, groupId uint64) error {
-	return db.Session(ctx).Where("group_id = @groupId", sql.Named("groupId", groupId)).Delete(&model.AdminGroupRule{}).Error
+func (r *AdminRoleRule) DeleteByRoleId(ctx context.Context, roleId uint64) error {
+	return db.Session(ctx).Where("role_id = @roleId", sql.Named("roleId", roleId)).Delete(&model.AdminRoleRule{}).Error
 }

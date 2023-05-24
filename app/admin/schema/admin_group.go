@@ -6,42 +6,42 @@ import (
 )
 
 type (
-	AdminGroupQueryRequest struct {
+	AdminRoleQueryRequest struct {
 		Name string `query:"name"`
 	}
 
-	AdminGroupCreateRequest struct {
+	AdminRoleCreateRequest struct {
 		Name  string   `json:"name"`
 		Rules []uint64 `json:"rules"`
 	}
 
-	AdminGroupEditRequest struct {
+	AdminRoleEditRequest struct {
 		Id uint64 `param:"id"`
 	}
 
-	AdminGroupUpdateRequest struct {
-		AdminGroupEditRequest
-		AdminGroupCreateRequest
+	AdminRoleUpdateRequest struct {
+		AdminRoleEditRequest
+		AdminRoleCreateRequest
 	}
 
-	AdminGroupDeleteRequest struct {
+	AdminRoleDeleteRequest struct {
 		Id uint64 `param:"id"`
 	}
 )
 
 var (
-	adminGroupNameRequired = validation.Required.Error("管理员分组名称不得为空")
-	adminGroupNameLength   = validation.RuneLength(1, 20).Error("管理员分组名称长度应该在1-20位")
+	adminRoleNameRequired = validation.Required.Error("管理员角色名称不得为空")
+	adminRoleNameLength   = validation.RuneLength(1, 20).Error("管理员角色名称长度应该在1-20位")
 )
 
-func (v *AdminGroupCreateRequest) Validate() error {
-	return validate.Check(validate.Field(&v.Name, adminGroupNameRequired, adminGroupNameLength))
+func (v *AdminRoleCreateRequest) Validate() error {
+	return validate.Check(validate.Field(&v.Name, adminRoleNameRequired, adminRoleNameLength))
 }
 
-func (v *AdminGroupEditRequest) Validate() error { return nil }
+func (v *AdminRoleEditRequest) Validate() error { return nil }
 
-func (v *AdminGroupUpdateRequest) Validate() error {
-	return validate.Check(validate.Field(&v.Name, adminGroupNameRequired, adminGroupNameLength))
+func (v *AdminRoleUpdateRequest) Validate() error {
+	return validate.Check(validate.Field(&v.Name, adminRoleNameRequired, adminRoleNameLength))
 }
 
-func (v *AdminGroupDeleteRequest) Validate() error { return nil }
+func (v *AdminRoleDeleteRequest) Validate() error { return nil }

@@ -13,7 +13,7 @@ import (
 // @date 2023-05-11 00:51:13
 func initLogger() {
 	formatter := &log.TextFormatter{
-		DisableColors: true,
+		DisableColors: false,
 		FullTimestamp: true,
 	}
 
@@ -32,7 +32,7 @@ func createDatabase(conf config.Config) {
 	_ = db.Instance(context.Background()).AutoMigrate(
 		&model.AdminUser{},
 		&model.AdminRule{},
-		&model.AdminGroup{},
+		&model.AdminRole{},
 		&model.SystemApi{},
 	)
 }

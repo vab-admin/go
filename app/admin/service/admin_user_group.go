@@ -7,58 +7,58 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
-type AdminUserGroup struct {
-	AdminGroupRepo     *repository.AdminGroup
-	AdminUserGroupRepo *repository.AdminUserGroup
+type AdminUserRole struct {
+	AdminRoleRepo     *repository.AdminRole
+	AdminUserRoleRepo *repository.AdminUserRole
 }
 
 // Create
 // @param ctx
 // @param userId
-// @param groupId
+// @param roleId
 // @date 2023-05-11 00:03:34
-func (s *AdminUserGroup) Create(ctx context.Context, userId uint64, groupId ...uint64) (err error) {
-	groupId = pie.Unique(groupId)
+func (s *AdminUserRole) Create(ctx context.Context, userId uint64, roleId ...uint64) (err error) {
+	roleId = pie.Unique(roleId)
 
-	groupId, err = s.AdminGroupRepo.IdsByIds(ctx, groupId...)
+	roleId, err = s.AdminRoleRepo.IdsByIds(ctx, roleId...)
 	if err != nil {
 		return err
 	}
 
-	if len(groupId) <= 0 {
+	if len(roleId) <= 0 {
 		return nil
 	}
 
-	groups := pie.Map(groupId, func(gid uint64) *model.AdminUserGroup {
-		return &model.AdminUserGroup{UserID: userId, GroupID: gid}
+	roles := pie.Map(roleId, func(id uint64) *model.AdminUserRole {
+		return &model.AdminUserRole{UserID: userId, RoleID: id}
 	})
 
-	return s.AdminUserGroupRepo.Create(ctx, groups...)
+	return s.AdminUserRoleRepo.Create(ctx, roles...)
 }
 
 // Update
 // @param ctx
 // @param userId
-// @param groupId
+// @param roleId
 // @date 2023-05-11 00:08:24
-func (s *AdminUserGroup) Update(ctx context.Context, userId uint64, groupId ...uint64) error {
-	groupId = pie.Unique(groupId)
+func (s *AdminUserRole) Update(ctx context.Context, userId uint64, roleId ...uint64) error {
+	roleId = pie.Unique(roleId)
 	// 获取到此用户已有的角色
-	existGroupId, err := s.AdminUserGroupRepo.GroupIdByUserId(ctx, userId)
+	existRoleId, err := s.AdminUserRoleRepo.RoleIdByUserId(ctx, userId)
 	if err != nil {
 		return err
 	}
 
-	insertGroupId, deleteGroupId := pie.Diff(existGroupId, groupId)
+	insertRoleId, deleteRoleId := pie.Diff(existRoleId, roleId)
 
-	if len(deleteGroupId) > 0 {
-		if err = s.AdminUserGroupRepo.DeleteByUserIdWithGroupId(ctx, userId, deleteGroupId...); err != nil {
+	if len(deleteRoleId) > 0 {
+		if err = s.AdminUserRoleRepo.DeleteByUserIdWithRoleId(ctx, userId, deleteRoleId...); err != nil {
 			return err
 		}
 	}
 
-	if len(insertGroupId) > 0 {
-		if err = s.Create(ctx, userId, insertGroupId...); err != nil {
+	if len(insertRoleId) > 0 {
+		if err = s.Create(ctx, userId, insertRoleId...); err != nil {
 			return err
 		}
 	}
@@ -70,6 +70,6 @@ func (s *AdminUserGroup) Update(ctx context.Context, userId uint64, groupId ...u
 // @param ctx
 // @param userId
 // @date 2023-05-11 21:12:52
-func (s *AdminUserGroup) Delete(ctx context.Context, userId uint64) error {
-	return s.AdminUserGroupRepo.DeleteByUserId(ctx, userId)
+func (s *AdminUserRole) Delete(ctx context.Context, userId uint64) error {
+	return s.AdminUserRoleRepo.DeleteByUserId(ctx, userId)
 }

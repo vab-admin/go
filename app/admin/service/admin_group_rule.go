@@ -7,9 +7,9 @@ import (
 	"vab-admin/go/pkg/model"
 )
 
-type AdminGroupRule struct {
-	AdminRuleRepo      *repository.AdminRule
-	AdminGroupRuleRepo *repository.AdminGroupRule
+type AdminRoleRule struct {
+	AdminRuleRepo     *repository.AdminRule
+	AdminRoleRuleRepo *repository.AdminRoleRule
 }
 
 // Create
@@ -17,7 +17,7 @@ type AdminGroupRule struct {
 // @param groupId
 // @param ruleId
 // @date 2023-05-10 21:36:12
-func (s *AdminGroupRule) Create(ctx context.Context, groupId uint64, ruleId ...uint64) (err error) {
+func (s *AdminRoleRule) Create(ctx context.Context, groupId uint64, ruleId ...uint64) (err error) {
 	ruleId = pie.Unique(ruleId)
 
 	ruleId, err = s.AdminRuleRepo.IdsByIds(ctx, ruleId...)
@@ -29,11 +29,11 @@ func (s *AdminGroupRule) Create(ctx context.Context, groupId uint64, ruleId ...u
 		return nil
 	}
 
-	rules := pie.Map(ruleId, func(ruleId uint64) *model.AdminGroupRule {
-		return &model.AdminGroupRule{GroupID: groupId, RuleID: ruleId}
+	rules := pie.Map(ruleId, func(ruleId uint64) *model.AdminRoleRule {
+		return &model.AdminRoleRule{RoleID: groupId, RuleID: ruleId}
 	})
 
-	return s.AdminGroupRuleRepo.Create(ctx, rules...)
+	return s.AdminRoleRuleRepo.Create(ctx, rules...)
 }
 
 // Update
@@ -41,10 +41,10 @@ func (s *AdminGroupRule) Create(ctx context.Context, groupId uint64, ruleId ...u
 // @param groupId
 // @param ruleId
 // @date 2023-05-10 21:46:20
-func (s *AdminGroupRule) Update(ctx context.Context, groupId uint64, ruleId ...uint64) error {
+func (s *AdminRoleRule) Update(ctx context.Context, groupId uint64, ruleId ...uint64) error {
 	ruleId = pie.Unique(ruleId)
 	// 获取到此分组已有到权限
-	existRuleId, err := s.AdminGroupRuleRepo.RuleIdByGroupId(ctx, groupId)
+	existRuleId, err := s.AdminRoleRuleRepo.RuleIdByRoleId(ctx, groupId)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (s *AdminGroupRule) Update(ctx context.Context, groupId uint64, ruleId ...u
 	insertRuleId, deleteRuleId := pie.Diff(existRuleId, ruleId)
 
 	if len(deleteRuleId) > 0 {
-		if err = s.AdminGroupRuleRepo.DeleteByGroupIdWithRuleId(ctx, groupId, deleteRuleId...); err != nil {
+		if err = s.AdminRoleRuleRepo.DeleteByRoleIdWithRuleId(ctx, groupId, deleteRuleId...); err != nil {
 			return err
 		}
 	}
@@ -66,10 +66,10 @@ func (s *AdminGroupRule) Update(ctx context.Context, groupId uint64, ruleId ...u
 	return nil
 }
 
-// DeleteByGroupId
+// DeleteByRoleId
 // @param ctx
 // @param groupId
 // @date 2023-05-11 21:16:09
-func (s *AdminGroupRule) DeleteByGroupId(ctx context.Context, groupId uint64) error {
-	return s.AdminGroupRuleRepo.DeleteByGroupId(ctx, groupId)
+func (s *AdminRoleRule) DeleteByRoleId(ctx context.Context, groupId uint64) error {
+	return s.AdminRoleRuleRepo.DeleteByRoleId(ctx, groupId)
 }
