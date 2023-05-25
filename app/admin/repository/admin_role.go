@@ -48,7 +48,7 @@ func (r *AdminRole) Edit(ctx context.Context, id uint64) (*model.AdminRole, erro
 		Preload("Rules", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select([]string{"id", "name"})
 		}).
-		Select([]string{"name", "id"}).Where("id = @id", sql.Named("id", id)).
+		Select([]string{"name", "id", "code"}).Where("id = @id", sql.Named("id", id)).
 		Limit(1).Find(row)
 
 	if err := tx.Error; err != nil {

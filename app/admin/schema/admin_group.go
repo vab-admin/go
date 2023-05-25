@@ -12,6 +12,7 @@ type (
 
 	AdminRoleCreateRequest struct {
 		Name  string   `json:"name"`
+		Code  string   `json:"code"`
 		Rules []uint64 `json:"rules"`
 	}
 

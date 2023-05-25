@@ -30,7 +30,7 @@ func (*AdminRuleApi) Create(ctx context.Context, groupRule ...*model.AdminRuleAp
 // @date 2023-05-11 22:37:36
 func (r *AdminRuleApi) ApiIdByRuleId(ctx context.Context, ruleId uint64) ([]uint64, error) {
 	var apiId []uint64
-	tx := db.Instance(ctx).Model(&model.AdminRuleApi{}).Where("rule_id = @ruleId", sql.Named("ruleId", ruleId)).Pluck("rule_id", &apiId)
+	tx := db.Instance(ctx).Model(&model.AdminRuleApi{}).Where("rule_id = @ruleId", sql.Named("ruleId", ruleId)).Pluck("api_id", &apiId)
 	if err := tx.Error; err != nil {
 		log.WithError(err).Error("获取规则绑定的接口id失败")
 		return nil, errors.ErrInternalServer

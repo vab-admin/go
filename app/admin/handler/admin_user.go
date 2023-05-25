@@ -39,8 +39,14 @@ func (h *AdminUser) Login(c echo.Context) error {
 // @param c
 // @date 2023-05-07 21:28:13
 func (h *AdminUser) Info(c echo.Context) error {
+	ctx := c.Request().Context()
 
-	return httpx.OkJSON(c, "获取成功", &schema.AdminUserInfo{})
+	info, err := h.AdminUserService.Info(ctx)
+	if err != nil {
+		return err
+	}
+
+	return httpx.OkJSON(c, "获取成功", info)
 }
 
 // Router

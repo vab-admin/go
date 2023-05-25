@@ -108,6 +108,11 @@ func (s *AdminUser) Update(ctx context.Context, req *schema.AdminUserUpdateReque
 		return err
 	}
 
+	userId := contextx.FromUserID(ctx)
+	if req.ID == 1 && userId != 1 {
+		return errors.New("无权限操作超级管理员")
+	}
+
 	now := tea.Int64(time.Now().Unix())
 
 	user := &model.AdminUser{
@@ -201,4 +206,33 @@ func (s *AdminUser) Router(ctx context.Context) ([]*schema.AdminRouter, error) {
 	}
 
 	return []*schema.AdminRouter{root}, nil
+}
+
+// Info
+// @param ctx
+// @date 2023-05-26 00:36:24
+func (s *AdminUser) Info(ctx context.Context) (*schema.AdminUserInfo, error) {
+	userId := contextx.FromUserID(ctx)
+
+	user, err := s.AdminUserRepo.Info(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	info := &schema.AdminUserInfo{
+		Avatar:   "",
+		Username: user.GetUsername(),
+	}
+
+	if userId == 1 {
+		info.Roles = []string{"root"}
+	} else {
+		info.Roles = pie.Map(user.Roles, func(t *model.AdminRole) string { return t.GetCode() })
+	}
+
+	if userId > 1 {
+		info.Permissions, _ = s.AdminUserRepo.InfoPermissions(ctx, userId)
+	}
+
+	return info, nil
 }

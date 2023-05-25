@@ -91,7 +91,7 @@ func (r *AdminRule) Create(ctx context.Context, m *model.AdminRule) error {
 // @date 2023-05-08 00:28:54
 func (r *AdminRule) All(ctx context.Context) ([]*model.AdminRule, error) {
 	var rows []*model.AdminRule
-	tx := db.Instance(ctx).Order("id DESC").Find(&rows)
+	tx := db.Instance(ctx).Order("sort ASC").Find(&rows)
 	if err := tx.Error; err != nil {
 		return nil, errors.ErrInternalServer
 	}

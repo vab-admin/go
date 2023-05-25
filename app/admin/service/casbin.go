@@ -69,7 +69,8 @@ func (c *CasbinAdapter) loadUserPolicy(ctx context.Context, m model.Model) error
 	}
 
 	for _, row := range rows {
-		line := fmt.Sprintf("g,%d,%d", row.UserID, row.RoleID)
+		line := fmt.Sprintf("g,u%d,g%d", row.UserID, row.RoleID)
+		fmt.Println("loadUserPolicy-", line)
 		_ = persist.LoadPolicyLine(line, m)
 	}
 
@@ -81,13 +82,16 @@ func (c *CasbinAdapter) loadRolePolicy(ctx context.Context, m model.Model) error
 
 	var groups []*model2.AdminRole
 
-	db.Session(ctx).Model(&model2.AdminRole{}).Preload("Rules").Find(&groups)
+	db.Session(ctx).Model(&model2.AdminRole{}).Preload("Rules.Apis").Find(&groups)
 
 	for _, group := range groups {
+
 		for _, rule := range group.Rules {
+
 			for _, action := range rule.Apis {
 
-				line := fmt.Sprintf("p,%d,%s,%s", group.GetId(), action.GetPath(), action.GetMethod())
+				line := fmt.Sprintf("p,g%d,%s,%s", group.GetId(), action.GetPath(), action.GetMethod())
+				fmt.Println("loadRolePolicy-", line)
 				_ = persist.LoadPolicyLine(line, m)
 			}
 		}

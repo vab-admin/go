@@ -19,7 +19,7 @@ type (
 		ID          *uint64      `gorm:"size:11;primaryKey;comment:主键;column:id" json:"id,omitempty"`
 		ParentID    *uint64      `gorm:"comment:上级id;default:0" json:"parentId,omitempty"`
 		Path        *string      `gorm:"size:200;comment:路由" json:"path,omitempty"`
-		Name        *string      `gorm:"size:100;uniqueIndex" json:"name,omitempty"`
+		Name        *string      `gorm:"size:100;" json:"name,omitempty"`
 		Component   *string      `gorm:"size:100;default:null" json:"component,omitempty"`
 		Redirect    *string      `gorm:"default:null;comment:重定向到子路由" json:"redirect,omitempty"`
 		Title       *string      `gorm:"size:50" json:"title,omitempty"`
@@ -37,6 +37,7 @@ type (
 		Status      *uint8       `gorm:"default:1;comment:是否启用" json:"status,omitempty"`
 		Type        *uint8       `gorm:"default:1;comment:菜单类型,0:公开,1:鉴权" json:"type,omitempty"`
 		Children    []*AdminRule `gorm:"-" json:"children,omitempty"`
+		Code        *string      `gorm:"size:50" json:"code,omitempty"`
 
 		Apis []*SystemApi `gorm:"many2many:AdminRuleApi;foreignKey:ID;joinForeignKey:RuleID;References:ID;joinReferences:ApiID" json:"apis,omitempty"`
 	}

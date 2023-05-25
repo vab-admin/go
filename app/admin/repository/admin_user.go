@@ -166,7 +166,15 @@ func (u *AdminUser) Router(ctx context.Context, userId uint64) ([]*model.AdminRu
 	tx := db.Session(ctx).Model(&model.AdminRule{}).Where("type = ?", model.AdminRuleTypeMenu).Order("sort ASC")
 
 	if userId > 1 {
-		db.Instance(ctx).Model(&model.AdminUserRole{}).Where("user_id = @userId", sql.Named("userId", userId))
+		roleSubQuery := db.Session(ctx).
+			Model(&model.AdminUserRole{}).
+			Where("user_id = @userID", sql.Named("userID", userId)).Select("role_id")
+
+		menuSubQuery := db.Session(ctx).
+			Model(&model.AdminRoleRule{}).
+			Where("role_id IN (@roleID)", sql.Named("roleID", roleSubQuery)).Select("rule_id")
+
+		tx.Where("id IN (@menuID)", sql.Named("menuID", menuSubQuery))
 	}
 
 	tx.Find(&rows)
@@ -176,4 +184,41 @@ func (u *AdminUser) Router(ctx context.Context, userId uint64) ([]*model.AdminRu
 	}
 
 	return rows, nil
+}
+
+func (u *AdminUser) Info(ctx context.Context, userId uint64) (*model.AdminUser, error) {
+	user := &model.AdminUser{}
+	tx := db.Instance(ctx).Model(&model.AdminUser{}).
+		Select([]string{"id", "account"}).
+		Preload("Roles", func(tx *gorm.DB) *gorm.DB {
+			return tx.Select([]string{"id", "code"})
+		}).
+		Where("id = @userID", sql.Named("userID", userId)).
+		Order("id DESC").Limit(1).Find(user)
+
+	if err := tx.Error; err != nil {
+		return nil, errors.ErrInternalServer
+	}
+
+	if tx.RowsAffected == 0 {
+		return nil, errors.New("获取信息失败")
+	}
+
+	return user, nil
+}
+
+func (u *AdminUser) InfoPermissions(ctx context.Context, userId uint64) ([]string, error) {
+	tx := db.Session(ctx).Model(&model.AdminRule{}).Where("code IS NOT NULL AND code <> ''")
+
+	roleSub := db.Session(ctx).Model(&model.AdminUserRole{}).Where("user_id = @userId", sql.Named("userId", userId)).Select("role_id")
+
+	ruleIdSub := db.Session(ctx).Model(&model.AdminRoleRule{}).Where("role_id IN (@roleId)", sql.Named("roleId", roleSub)).Select("rule_id")
+
+	tx.Where("id IN (@ruleIds)", sql.Named("ruleIds", ruleIdSub))
+
+	var code []string
+
+	tx.Pluck("code", &code)
+
+	return code, nil
 }

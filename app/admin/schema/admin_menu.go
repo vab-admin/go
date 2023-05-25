@@ -29,6 +29,7 @@ type (
 		Dot         bool     `json:"dot"`
 		Target      string   `json:"target"`
 		Apis        []uint64 `json:"apis"`
+		Code        string   `json:"code"`
 	}
 
 	AdminRuleEditRequest struct {
@@ -66,6 +67,7 @@ var (
 // @date 2023-05-10 00:54:33
 func (v *AdminRuleCreateRequest) ToAdminRuleModel() *model.AdminRule {
 	return &model.AdminRule{
+		Code:        tea.String(v.Code),
 		Title:       tea.String(v.Title),
 		Hidden:      tea.Bool(v.Hidden),
 		LevelHidden: tea.Bool(v.LevelHidden),

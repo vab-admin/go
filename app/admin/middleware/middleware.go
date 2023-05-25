@@ -9,7 +9,8 @@ type SkipperFunc func(echo.Context) bool
 
 func SkipHandler(c echo.Context, skippers ...SkipperFunc) bool {
 	for _, skipper := range skippers {
-		if skipper(c) {
+
+		if skipper != nil && skipper(c) {
 			return true
 		}
 	}

@@ -38,6 +38,7 @@ func (l *AdminRole) Create(ctx context.Context, req *schema.AdminRoleCreateReque
 	now := tea.Int64(time.Now().Unix())
 
 	m := &model.AdminRole{
+		Code:      tea.String(req.Code),
 		Name:      tea.String(req.Name),
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -81,6 +82,7 @@ func (l *AdminRole) Update(ctx context.Context, req *schema.AdminRoleUpdateReque
 	now := tea.Int64(time.Now().Unix())
 
 	m := &model.AdminRole{
+		Code:      tea.String(req.Code),
 		Name:      tea.String(req.Name),
 		UpdatedAt: now,
 	}

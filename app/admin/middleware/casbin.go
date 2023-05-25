@@ -21,8 +21,11 @@ func Casbin(enforcer *service.Enforcer, skippers ...SkipperFunc) echo.Middleware
 			m := c.Request().Method
 
 			userID := contextx.FromUserID(c.Request().Context())
+			if userID == 1 {
+				return next(c)
+			}
 
-			ok, err := enforcer.Enforce(strconv.FormatUint(userID, 10), p, m)
+			ok, err := enforcer.Enforce("u"+strconv.FormatUint(userID, 10), p, m)
 			if err != nil {
 				log.WithError(err).WithFields(map[string]any{
 					"path":   p,

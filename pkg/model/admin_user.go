@@ -21,3 +21,6 @@ func (*AdminUser) TableName() string { return "admin_users" }
 func (u *AdminUser) GetId() uint64 { return tea.Uint64Value(u.ID) }
 
 func (u *AdminUser) GetPassword() string { return tea.StringValue(u.Password) }
+
+func (u *AdminUser) GetMobile() string   { return tea.StringValue(u.Mobile) }
+func (u *AdminUser) GetUsername() string { return tea.StringValue(u.Account) }

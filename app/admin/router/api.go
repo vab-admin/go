@@ -1,6 +1,9 @@
 package router
 
-import "github.com/labstack/echo/v5"
+import (
+	"github.com/labstack/echo/v5"
+	"vab-admin/go/app/admin/middleware"
+)
 
 // Api
 // @param api
@@ -10,7 +13,7 @@ func (r *Route) Api(api *echo.Group) {
 	api.GET("/userInfo", r.AdminUserHandler.Info)
 	api.GET("/router", r.AdminUserHandler.Router)
 
-	adminRoute := api.Group("/admin")
+	adminRoute := api.Group("/admin", middleware.Casbin(r.Enforcer, nil))
 	{
 		apiRouters("管理员用户", "/users", adminRoute, r.AdminUserHandler)
 
