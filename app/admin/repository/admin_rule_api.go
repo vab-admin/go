@@ -51,6 +51,18 @@ func (r *AdminRuleApi) DeleteByRuleIdWithApiId(ctx context.Context, ruleId uint6
 	return nil
 }
 
+// DeleteByRuleId
+// @param ctx
+// @param ruleId
+// @date 2023-05-25 23:09:59
 func (r *AdminRuleApi) DeleteByRuleId(ctx context.Context, ruleId uint64) error {
 	return db.Session(ctx).Where("rule_id = @ruleId", sql.Named("ruleId", ruleId)).Delete(&model.AdminRuleApi{}).Error
+}
+
+// DeleteByApiId
+// @param ctx
+// @param apiId
+// @date 2023-05-25 23:09:58
+func (r *AdminRuleApi) DeleteByApiId(ctx context.Context, apiId uint64) error {
+	return db.Session(ctx).Where("api_id = @apiId", sql.Named("apiId", apiId)).Delete(&model.AdminRuleApi{}).Error
 }

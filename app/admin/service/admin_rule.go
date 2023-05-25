@@ -14,9 +14,10 @@ import (
 )
 
 type AdminRule struct {
-	EnforcerService     *Enforcer
-	AdminRuleApiService *AdminRuleApi
-	AdminRuleRepo       *repository.AdminRule
+	EnforcerService      *Enforcer
+	AdminRuleApiService  *AdminRuleApi
+	AdminRoleRuleService *AdminRoleRule
+	AdminRuleRepo        *repository.AdminRule
 }
 
 // Create
@@ -132,7 +133,11 @@ func (l *AdminRule) Delete(ctx context.Context, req *schema.AdminRuleDeleteReque
 			return err
 		}
 
-		if err = l.AdminRuleApiService.Delete(ctx, req.Id); err != nil {
+		if err = l.AdminRuleApiService.DeleteByRuleId(ctx, req.Id); err != nil {
+			return err
+		}
+
+		if err = l.AdminRoleRuleService.DeleteByRuleId(ctx, req.Id); err != nil {
 			return err
 		}
 

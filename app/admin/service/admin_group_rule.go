@@ -73,3 +73,7 @@ func (s *AdminRoleRule) Update(ctx context.Context, groupId uint64, ruleId ...ui
 func (s *AdminRoleRule) DeleteByRoleId(ctx context.Context, groupId uint64) error {
 	return s.AdminRoleRuleRepo.DeleteByRoleId(ctx, groupId)
 }
+
+func (s *AdminRoleRule) DeleteByRuleId(ctx context.Context, ruleId uint64) error {
+	return s.AdminRoleRuleRepo.DeleteByRuleId(ctx, ruleId)
+}

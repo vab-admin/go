@@ -59,3 +59,11 @@ func (r *AdminRoleRule) RuleIdByRoleId(ctx context.Context, roleId uint64) ([]ui
 func (r *AdminRoleRule) DeleteByRoleId(ctx context.Context, roleId uint64) error {
 	return db.Session(ctx).Where("role_id = @roleId", sql.Named("roleId", roleId)).Delete(&model.AdminRoleRule{}).Error
 }
+
+// DeleteByRuleId
+// @param ctx
+// @param ruleId
+// @date 2023-05-25 23:02:29
+func (r *AdminRoleRule) DeleteByRuleId(ctx context.Context, ruleId uint64) error {
+	return db.Session(ctx).Where("rule_id = @ruleId", sql.Named("ruleId", ruleId)).Delete(&model.AdminRoleRule{}).Error
+}

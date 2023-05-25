@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/elliotchance/pie/v2"
 	"time"
 	"vab-admin/go/app/admin/repository"
 	"vab-admin/go/app/admin/schema"
@@ -12,6 +13,7 @@ import (
 	"vab-admin/go/pkg/errors"
 	"vab-admin/go/pkg/model"
 	"vab-admin/go/pkg/pagination"
+	"vab-admin/go/pkg/util"
 	"vab-admin/go/pkg/util/hash"
 )
 
@@ -160,8 +162,43 @@ func (s *AdminUser) Delete(ctx context.Context, req *schema.AdminUserDeleteReque
 
 }
 
-func (s *AdminUser) Router(ctx context.Context) ([]*model.AdminRule, error) {
+// Router
+// @param ctx
+// @date 2023-05-25 23:13:18
+func (s *AdminUser) Router(ctx context.Context) ([]*schema.AdminRouter, error) {
 	userId := contextx.FromUserID(ctx)
 
-	return s.AdminUserRepo.Router(ctx, userId)
+	routers, err := s.AdminUserRepo.Router(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	var rows = pie.Map(routers, func(rule *model.AdminRule) *schema.AdminRouter {
+		return &schema.AdminRouter{
+			Id:        rule.GetId(),
+			ParentId:  rule.GetParentId(),
+			Path:      rule.GetPath(),
+			Name:      rule.GetName(),
+			Component: rule.GetComponent(),
+			Redirect:  rule.GetRedirect(),
+			Meta: &schema.AdminRouterMeta{
+				Title:       rule.GetTitle(),
+				Icon:        rule.GetIcon(),
+				Hidden:      rule.GetHidden(),
+				LevelHidden: rule.GetLevelHidden(),
+			},
+		}
+	})
+
+	rows = util.AdminRouterToTree(rows, 0)
+
+	root := &schema.AdminRouter{
+		Path:      "/",
+		Name:      "Layout",
+		Component: "Layout",
+		Meta:      &schema.AdminRouterMeta{LevelHidden: true},
+		Children:  rows,
+	}
+
+	return []*schema.AdminRouter{root}, nil
 }

@@ -6,12 +6,14 @@ import (
 	"time"
 	"vab-admin/go/app/admin/repository"
 	"vab-admin/go/app/admin/schema"
+	"vab-admin/go/pkg/db"
 	"vab-admin/go/pkg/model"
 	"vab-admin/go/pkg/pagination"
 )
 
 type SystemApi struct {
-	SystemApiRepo *repository.SystemApi
+	SystemApiRepo       *repository.SystemApi
+	AdminRuleApiService *AdminRuleApi
 }
 
 // Query
@@ -70,7 +72,14 @@ func (l *SystemApi) Delete(ctx context.Context, req *schema.SystemApiDeleteReque
 	if err := req.Validate(); err != nil {
 		return err
 	}
-	return l.SystemApiRepo.Delete(ctx, req.Id)
+
+	return db.Transaction(ctx, func(ctx context.Context) error {
+		if err := l.SystemApiRepo.Delete(ctx, req.Id); err != nil {
+			return err
+		}
+
+		return l.AdminRuleApiService.DeleteByApiId(ctx, req.Id)
+	})
 }
 
 func (l *SystemApi) All(ctx context.Context) ([]*model.SystemApi, error) {

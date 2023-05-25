@@ -66,10 +66,14 @@ func (s *AdminRuleApi) Update(ctx context.Context, ruleId uint64, apiId ...uint6
 	return nil
 }
 
-// Delete
+// DeleteByRuleId
 // @param ctx
 // @param ruleId
 // @date 2023-05-24 21:19:53
-func (s *AdminRuleApi) Delete(ctx context.Context, ruleId uint64) error {
+func (s *AdminRuleApi) DeleteByRuleId(ctx context.Context, ruleId uint64) error {
 	return s.AdminRuleApiRepo.DeleteByRuleId(ctx, ruleId)
+}
+
+func (s *AdminRuleApi) DeleteByApiId(ctx context.Context, apiId uint64) error {
+	return s.AdminRuleApiRepo.DeleteByApiId(ctx, apiId)
 }

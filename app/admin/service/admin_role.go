@@ -13,6 +13,7 @@ import (
 type AdminRole struct {
 	EnforcerService      *Enforcer
 	AdminRoleRuleService *AdminRoleRule
+	AdminUserRoleService *AdminUserRole
 	AdminRoleRepo        *repository.AdminRole
 }
 
@@ -113,6 +114,10 @@ func (l *AdminRole) Delete(ctx context.Context, req *schema.AdminRoleDeleteReque
 		}
 
 		if err := l.AdminRoleRuleService.DeleteByRoleId(ctx, req.Id); err != nil {
+			return err
+		}
+
+		if err := l.AdminUserRoleService.DeleteByRoleId(ctx, req.Id); err != nil {
 			return err
 		}
 

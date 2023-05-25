@@ -94,7 +94,7 @@ func (v *AdminRuleCreateRequest) Validate() error {
 	return validate.Check(
 		validate.Field(&v.Type, adminRuleTypeRequired, adminRuleTypeIn),
 		validate.Field(&v.Status, adminRuleStatusRequired, adminRuleStatusIn),
-		validate.Field(&v.Name, adminRuleNameRequired, adminRuleNameLength),
+		validate.Field(&v.Name, adminRuleNameRequired.When(v.Type == model.AdminRuleTypeMenu), adminRuleNameLength),
 	)
 }
 
@@ -108,7 +108,7 @@ func (v *AdminRuleUpdateRequest) Validate() error {
 	return validate.Check(
 		validate.Field(&v.Type, adminRuleTypeRequired, adminRuleTypeIn),
 		validate.Field(&v.Status, adminRuleStatusRequired, adminRuleStatusIn),
-		validate.Field(&v.Name, adminRuleNameRequired, adminRuleNameLength),
+		validate.Field(&v.Name, adminRuleNameRequired.When(v.Type == model.AdminRuleTypeMenu), adminRuleNameLength),
 	)
 }
 

@@ -160,8 +160,20 @@ func (u *AdminUser) DeleteById(ctx context.Context, id uint64) error {
 // @param id
 // @date 2023-05-17 17:12:32
 func (u *AdminUser) Router(ctx context.Context, userId uint64) ([]*model.AdminRule, error) {
-	tx := db.Session(ctx).Model(&model.AdminRule{}).Order("sort ASC")
+
+	var rows []*model.AdminRule
+
+	tx := db.Session(ctx).Model(&model.AdminRule{}).Where("type = ?", model.AdminRuleTypeMenu).Order("sort ASC")
+
 	if userId > 1 {
 		db.Instance(ctx).Model(&model.AdminUserRole{}).Where("user_id = @userId", sql.Named("userId", userId))
 	}
+
+	tx.Find(&rows)
+
+	if err := tx.Error; err != nil {
+		return nil, errors.ErrInternalServer
+	}
+
+	return rows, nil
 }

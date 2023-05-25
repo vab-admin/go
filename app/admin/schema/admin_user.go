@@ -69,6 +69,23 @@ type (
 	AdminUserDeleteRequest struct {
 		ID uint64 `param:"id"`
 	}
+
+	AdminRouterMeta struct {
+		Title       string `json:"title,omitempty"`
+		Icon        string `json:"icon,omitempty"`
+		Hidden      bool   `json:"hidden,omitempty"`
+		LevelHidden bool   `json:"levelHidden,omitempty"`
+	}
+	AdminRouter struct {
+		Id        uint64           `json:"-"`
+		ParentId  uint64           `json:"-"`
+		Path      string           `json:"path"`
+		Name      string           `json:"name"`
+		Component string           `json:"component"`
+		Redirect  string           `json:"redirect,omitempty"`
+		Meta      *AdminRouterMeta `json:"meta,omitempty"`
+		Children  []*AdminRouter   `json:"children,omitempty"`
+	}
 )
 
 var (

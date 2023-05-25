@@ -61,5 +61,13 @@ func (r *AdminUserRole) DeleteByUserIdWithRoleId(ctx context.Context, userId uin
 // @param userId
 // @date 2023-05-11 21:12:23
 func (r *AdminUserRole) DeleteByUserId(ctx context.Context, userId uint64) error {
-	return db.Session(ctx).Where("user_id IN @userId", sql.Named("userId", userId)).Delete(&model.AdminUserRole{}).Error
+	return db.Session(ctx).Where("user_id = @userId", sql.Named("userId", userId)).Delete(&model.AdminUserRole{}).Error
+}
+
+// DeleteByRoleId
+// @param ctx
+// @param roleId
+// @date 2023-05-25 22:58:21
+func (r *AdminUserRole) DeleteByRoleId(ctx context.Context, roleId uint64) error {
+	return db.Session(ctx).Where("role_id = @roleId", sql.Named("roleId", roleId)).Delete(&model.AdminUserRole{}).Error
 }

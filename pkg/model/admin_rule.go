@@ -42,7 +42,15 @@ type (
 	}
 )
 
-func (*AdminRule) TableName() string     { return "admin_rules" }
-func (m *AdminRule) GetParentId() uint64 { return tea.Uint64Value(m.ParentID) }
-func (m *AdminRule) GetId() uint64       { return tea.Uint64Value(m.ID) }
-func (m *AdminRule) GetType() uint8      { return tea.Uint8Value(m.Type) }
+func (*AdminRule) TableName() string      { return "admin_rules" }
+func (m *AdminRule) GetParentId() uint64  { return tea.Uint64Value(m.ParentID) }
+func (m *AdminRule) GetId() uint64        { return tea.Uint64Value(m.ID) }
+func (m *AdminRule) GetType() uint8       { return tea.Uint8Value(m.Type) }
+func (m *AdminRule) GetPath() string      { return tea.StringValue(m.Path) }
+func (m *AdminRule) GetName() string      { return tea.StringValue(m.Name) }
+func (m *AdminRule) GetComponent() string { return tea.StringValue(m.Component) }
+func (m *AdminRule) GetRedirect() string  { return tea.StringValue(m.Redirect) }
+func (m *AdminRule) GetTitle() string     { return tea.StringValue(m.Title) }
+func (m *AdminRule) GetIcon() string      { return tea.StringValue(m.Icon) }
+func (m *AdminRule) GetHidden() bool      { return tea.BoolValue(m.Hidden) }
+func (m *AdminRule) GetLevelHidden() bool { return tea.BoolValue(m.LevelHidden) }

@@ -2,9 +2,26 @@ package util
 
 import (
 	"gorm.io/datatypes"
+	"vab-admin/go/app/admin/schema"
 	"vab-admin/go/pkg/model"
 )
 
+func AdminRouterToTree(rows []*schema.AdminRouter, pid uint64) []*schema.AdminRouter {
+	var arr []*schema.AdminRouter
+	for _, v := range rows {
+		if pid == v.ParentId {
+			children := AdminRouterToTree(rows, v.Id)
+			v.Children = children
+			arr = append(arr, v)
+		}
+	}
+	return arr
+}
+
+// AdminRuleToTree
+// @param rows
+// @param pid
+// @date 2023-05-25 21:11:15
 func AdminRuleToTree(rows []*model.AdminRule, pid uint64) []*model.AdminRule {
 	var arr []*model.AdminRule
 	for _, v := range rows {
@@ -17,6 +34,10 @@ func AdminRuleToTree(rows []*model.AdminRule, pid uint64) []*model.AdminRule {
 	return arr
 }
 
+// FindSubRules
+// @param categories
+// @param parentId
+// @date 2023-05-25 21:11:14
 func FindSubRules(categories []*model.AdminRule, parentId uint64) []*model.AdminRule {
 	var result []*model.AdminRule
 
@@ -36,6 +57,9 @@ func FindSubRules(categories []*model.AdminRule, parentId uint64) []*model.Admin
 	return result
 }
 
+// DataTypeJSON DataTypeJSON[T any]
+// @param data
+// @date 2023-05-25 21:11:13
 func DataTypeJSON[T any](data T) *datatypes.JSONType[T] {
 	v := datatypes.NewJSONType(data)
 	return &v

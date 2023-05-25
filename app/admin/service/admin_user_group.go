@@ -73,3 +73,7 @@ func (s *AdminUserRole) Update(ctx context.Context, userId uint64, roleId ...uin
 func (s *AdminUserRole) Delete(ctx context.Context, userId uint64) error {
 	return s.AdminUserRoleRepo.DeleteByUserId(ctx, userId)
 }
+
+func (s *AdminUserRole) DeleteByRoleId(ctx context.Context, roleId uint64) error {
+	return s.AdminUserRoleRepo.DeleteByRoleId(ctx, roleId)
+}
