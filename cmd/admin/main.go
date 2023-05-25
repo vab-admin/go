@@ -19,6 +19,7 @@ func initLogger() {
 
 	log.SetLevel(log.TraceLevel)
 	log.SetFormatter(formatter)
+	log.SetReportCaller(true)
 
 }
 

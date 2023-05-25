@@ -12,6 +12,11 @@ type AdminRuleApi struct {
 	AdminRuleApiRepo *repository.AdminRuleApi
 }
 
+// Create
+// @param ctx
+// @param ruleId
+// @param apiId
+// @date 2023-05-24 21:17:41
 func (s *AdminRuleApi) Create(ctx context.Context, ruleId uint64, apiId ...uint64) (err error) {
 	apiId = pie.Unique(apiId)
 
@@ -31,6 +36,11 @@ func (s *AdminRuleApi) Create(ctx context.Context, ruleId uint64, apiId ...uint6
 	return s.AdminRuleApiRepo.Create(ctx, ruleApis...)
 }
 
+// Update
+// @param ctx
+// @param ruleId
+// @param apiId
+// @date 2023-05-24 21:17:38
 func (s *AdminRuleApi) Update(ctx context.Context, ruleId uint64, apiId ...uint64) error {
 	apiId = pie.Unique(apiId)
 
@@ -56,6 +66,10 @@ func (s *AdminRuleApi) Update(ctx context.Context, ruleId uint64, apiId ...uint6
 	return nil
 }
 
+// Delete
+// @param ctx
+// @param ruleId
+// @date 2023-05-24 21:19:53
 func (s *AdminRuleApi) Delete(ctx context.Context, ruleId uint64) error {
 	return s.AdminRuleApiRepo.DeleteByRuleId(ctx, ruleId)
 }

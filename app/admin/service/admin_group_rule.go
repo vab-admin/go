@@ -43,7 +43,7 @@ func (s *AdminRoleRule) Create(ctx context.Context, groupId uint64, ruleId ...ui
 // @date 2023-05-10 21:46:20
 func (s *AdminRoleRule) Update(ctx context.Context, groupId uint64, ruleId ...uint64) error {
 	ruleId = pie.Unique(ruleId)
-	// 获取到此分组已有到权限
+
 	existRuleId, err := s.AdminRoleRuleRepo.RuleIdByRoleId(ctx, groupId)
 	if err != nil {
 		return err
